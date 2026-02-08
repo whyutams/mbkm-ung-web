@@ -28,12 +28,30 @@ export default function Header() {
       const scrolled = window.scrollY > 20
       setIsScrolled(scrolled)
       if (scrolled !== displayLogo) {
-        const timer = setTimeout(() => {
-          setDisplayLogo(scrolled)
-        }, 300)
-        return () => clearTimeout(timer)
+        setDisplayLogo(scrolled)
       }
+
+      const scrollPosition = window.scrollY + 100
+
+      navLinks.forEach((link) => {
+        const sectionId = link.href === '/' ? 'hero' : link.href.replace('/#', '')
+        const element = document.getElementById(sectionId)
+
+        if (element) {
+          const offsetTop = element.offsetTop
+          const offsetHeight = element.offsetHeight
+
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(sectionId)
+          }
+        }
+      })
     }
+
+    handleScroll()
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -43,19 +61,26 @@ export default function Header() {
     if (isMobileMenuOpen) {
       setTimeout(() => {
         setIsDisplayMobileMenu(isMobileMenuOpen)
-      }, 500);
-    } else setIsDisplayMobileMenu(isMobileMenuOpen);
+      }, 500)
+    } else setIsDisplayMobileMenu(isMobileMenuOpen)
   }, [isMobileMenuOpen])
 
   const scrollToSection = (href: string) => {
-    if (href.startsWith('#')) {
-      const element = document.querySelector(href) as HTMLElement
+    const targetId = href === '/' ? '#hero' : href.replace('/', '')
+
+    if (targetId.startsWith('#')) {
+      const element = document.querySelector(targetId) as HTMLElement
       if (element && lenis) {
         lenis.scrollTo(element, { offset: -80 })
-        setActiveSection(href.substring(1))
+        setActiveSection(targetId.substring(1))
         setIsMobileMenuOpen(false)
       }
     }
+  }
+
+  const isActive = (href: string) => {
+    const id = href === '/' ? 'hero' : href.substring(2)
+    return activeSection === id
   }
 
   return (
@@ -69,7 +94,8 @@ export default function Header() {
             <div className="flex items-center justify-center gap-2">
               <img src={LogoKemen.src} alt="Logo Kemendikbud" className="h-10 w-10" />
               <img src={LogoUNG.src} alt="Logo UNG" className="h-[38px] w-[38px] mr-[2px]" />
-              <img src={(displayLogo || isMobileMenuOpen) ? LogoKM2.src : LogoKM.src} alt="Logo Kampus Merdeka" className="h-10" />
+              <img src={LogoKM.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen) ? 'hidden' : ''}`} />
+              <img src={LogoKM2.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen) ? '' : 'hidden'}`} />
             </div>
           </div>
 
@@ -78,7 +104,7 @@ export default function Header() {
               <li key={link.name}>
                 <button
                   onClick={() => scrollToSection(link.href)}
-                  className={`text-sm font-medium transition-colors relative group ${activeSection === link.href.substring(1)
+                  className={`text-sm font-medium transition-colors relative group ${isActive(link.href)
                     ? isScrolled
                       ? 'text-orange-500'
                       : 'text-white'
@@ -89,7 +115,7 @@ export default function Header() {
                 >
                   {link.name}
                   <span
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-orange-500 transition-all duration-300 ${activeSection === link.href.substring(1) ? 'w-full' : 'w-0 group-hover:w-full'
+                    className={`absolute -bottom-1 left-0 h-0.5 bg-orange-500 transition-all duration-300 ${isActive(link.href) ? 'w-full' : 'w-0 group-hover:w-full'
                       }`}
                   />
                 </button>
@@ -117,39 +143,32 @@ export default function Header() {
         </div>
 
         {/* Mobile Menu */}
-        {isDisplayMobileMenu && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 rounded-b-2xl">
-            <ul className="flex flex-col">
-              {navLinks.map((link) => (
-                <li key={link.name}>
-                  <button
-                    onClick={() => scrollToSection(link.href)}
-                    className={`w-full text-left px-6 py-3 text-sm font-medium transition-colors ${activeSection === link.href.substring(1)
-                      ? 'text-orange-500 bg-orange-50'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-orange-500'
-                      }`}
-                  >
-                    {link.name}
-                  </button>
-                </li>
-              ))}
-              <li className="border-t border-gray-200 mt-2 pt-2 px-6 flex flex-col gap-2">
-                <Link
-                  href="/login"
-                  className="text-center py-2 text-sm font-medium text-gray-700 hover:text-orange-500"
+        <div
+          className={`lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 rounded-b-2xl transition-all duration-500 ease-in-out transform origin-top ${isMobileMenuOpen ? 'visible opacity-100 translate-y-0 delay-200' : 'invisible opacity-0 -translate-y-4'}`} >
+          <ul className="flex flex-col">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                <button
+                  onClick={() => scrollToSection(link.href)}
+                  className={`w-full text-left px-6 py-3 text-sm font-medium transition-colors ${isActive(link.href)
+                    ? 'text-orange-500 bg-orange-50'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-orange-500'
+                    }`}
                 >
-                  Masuk
-                </Link>
-                <Link
-                  href="/dashboard"
-                  className="text-center py-2 px-6 bg-orange-500 text-white rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors"
-                >
-                  Dashboard
-                </Link>
+                  {link.name}
+                </button>
               </li>
-            </ul>
-          </div>
-        )}
+            ))}
+            <li className="border-t border-gray-200 mt-2 pt-4 px-6 flex flex-col gap-2">
+              <Link
+                href="/login"
+                className="text-center py-2 px-6 bg-orange-500 text-white rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors"
+              >
+                Masuk
+              </Link>
+            </li>
+          </ul>
+        </div>
       </nav>
     </header>
   )
