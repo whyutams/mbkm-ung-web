@@ -1,10 +1,8 @@
 {/* Components */}
 import Header from "./components/Header"
 import Hero from "./components/sections/Hero"
-import About from "./components/sections/About"
-import ProjectsPreview from "./components/sections/ProjectsPreview"
 import BlogPreview from "./components/sections/BlogPreview"
-import MembersPreview from "./components/sections/MembersPreview"
+import AboutUs from "./components/sections/AboutUs"
 import Footer from "./components/Footer"
 {/* Components End */}
 
@@ -13,11 +11,9 @@ export default function HomePage() {
     <>
       <Header />
       <main>
-        <Hero />
-        {/* <About /> */}
-        {/* <ProjectsPreview /> */}
+        <Hero /> 
         <BlogPreview />
-        <MembersPreview />
+        <AboutUs />
       </main>
       <Footer />
     </>
