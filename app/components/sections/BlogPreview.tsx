@@ -77,57 +77,63 @@ const recentPosts = [
 export default function BlogPreview() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const [itemsPerPage, setItemsPerPage] = useState(1)
+  const [mounted, setMounted] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const AUTOPLAY_INTERVAL = 5000
-  const getMaxIndex = () => {
-    if (typeof window !== 'undefined') {
+
+  useEffect(() => {
+    setMounted(true)
+
+    const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        return Math.max(0, recentPosts.length - 4)
+        setItemsPerPage(3)
       } else if (window.innerWidth >= 768) {
-        return Math.max(0, recentPosts.length - 2)
+        setItemsPerPage(2)
+      } else {
+        setItemsPerPage(1)
       }
     }
-    return Math.max(0, recentPosts.length - 1)
-  }
-  {/* Effects */ }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const maxIndex = Math.max(0, recentPosts.length - itemsPerPage)
+
   useEffect(() => {
     if (!isAutoPlaying) return
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
-        const maxIndex = getMaxIndex()
         return prev >= maxIndex ? 0 : prev + 1
       })
     }, AUTOPLAY_INTERVAL)
 
     return () => clearInterval(interval)
-  }, [isAutoPlaying])
-  {/* Effects End */ }
+  }, [isAutoPlaying, maxIndex])
 
-  {/* Functions */ }
   const handleMouseEnter = () => setIsAutoPlaying(false)
   const handleMouseLeave = () => setIsAutoPlaying(true)
+
   const handleNext = () => {
-    setCurrentIndex((prev) => {
-      const maxIndex = getMaxIndex()
-      return prev >= maxIndex ? 0 : prev + 1
-    })
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1))
   }
+
   const handlePrev = () => {
-    setCurrentIndex((prev) => {
-      const maxIndex = getMaxIndex()
-      return prev <= 0 ? maxIndex : prev - 1
-    })
+    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1))
   }
+
   const handleDotClick = (index: number) => {
-    const maxIndex = getMaxIndex()
     setCurrentIndex(Math.min(index, maxIndex))
     setIsAutoPlaying(false)
   }
-  {/* Functions End */ }
+
+  if (!mounted) return null;
 
   return (
-    <section id="blog" className="py-20 lg:py-32 bg-gradient-to-b from-gray-50 to-white">
+    <section id="blog" className="py-20 lg:py-32 bg-[#F8FAFC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -166,7 +172,7 @@ export default function BlogPreview() {
             <motion.div
               className="flex"
               animate={{
-                x: `-${currentIndex * 100}%`,
+                x: `-${currentIndex * (100 / itemsPerPage)}%`,
               }}
               transition={{
                 type: 'spring',
@@ -252,7 +258,7 @@ export default function BlogPreview() {
             </button>
             <button
               onClick={handleNext}
-              disabled={currentIndex >= getMaxIndex()}
+              disabled={currentIndex >= maxIndex}
               className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-400 z-10 border border-gray-200"
               aria-label="Next"
             >
@@ -262,11 +268,11 @@ export default function BlogPreview() {
         </div>
 
         <div className="flex justify-center gap-2 mt-8">
-          {Array.from({ length: getMaxIndex() + 1}).map((_, index) => (
+          {Array.from({ length: maxIndex + 1 }).map((_, index) => (
             <button
               key={index}
               onClick={() => handleDotClick(index)}
-              className={`h-2 rounded-full transition-all ${index === getMaxIndex()+1 ? 'hidden md:inline' : ''} ${index === currentIndex
+              className={`h-2 rounded-full transition-all ${index === currentIndex
                 ? 'w-8 bg-orange-500'
                 : 'w-2 bg-gray-300 hover:bg-gray-400'
                 }`}
@@ -286,7 +292,7 @@ export default function BlogPreview() {
           </button>
           <button
             onClick={handleNext}
-            disabled={currentIndex >= getMaxIndex()}
+            disabled={currentIndex >= maxIndex}
             className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-gray-200"
             aria-label="Next"
           >
@@ -304,8 +310,7 @@ export default function BlogPreview() {
             href="/blog"
             className="inline-flex items-center gap-2 px-8 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-all shadow-lg"
           >
-            Lihat Semua Artikel
-            <ArrowRight className="h-5 w-5" />
+            Lihat Semua
           </Link>
         </motion.div>
       </div>
