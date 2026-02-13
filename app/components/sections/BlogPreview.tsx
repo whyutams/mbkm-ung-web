@@ -4,77 +4,14 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Calendar, User, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
+{/* Components */ }
 import BlurImage from '../BlurImage'
+{/* Components End */ }
+{/* Interfaces */ }
+import { Post } from "@/interfaces/supabase"
+{/* Interfaces End */ }
 
-const recentPosts = [
-  {
-    id: 1,
-    title: 'Meningkatkan Literasi Digital Guru Melalui Pelatihan Canva',
-    slug: 'meningkatkan-literasi-digital-guru-canva',
-    description: 'Dokumentasi kegiatan workshop pembuatan media pembelajaran interaktif berbasis visual bersama dewan guru di SDN 15 Kota Gorontalo.',
-    thumbnail: 'https://media-cdn.tripadvisor.com/media/photo-s/07/4c/58/94/suasana-pelatihan-positive.jpg',
-    author: {
-      name: 'Rahmat Hidayat',
-      avatar: '/assets/avatars/rahmat.jpg',
-    },
-    publishedAt: '2024-02-10',
-    readTime: 5,
-  },
-  {
-    id: 2,
-    title: 'Tantangan dan Keseruan Adaptasi Teknologi di Sekolah Pelosok',
-    slug: 'tantangan-adaptasi-teknologi-sekolah',
-    description: 'Cerita pengalaman kami mengenalkan penggunaan laptop dan internet dasar (AKM Kelas) kepada siswa yang baru pertama kali memegang komputer.',
-    thumbnail: 'https://img.antarafoto.com/cache/1200x794/2018/04/09/unbk-menggunakan-laptop-siswa-dan-guru-gmx4-dom.webp',
-    author: {
-      name: 'Siti Aminah',
-      avatar: '/assets/avatars/siti.jpg',
-    },
-    publishedAt: '2024-02-08',
-    readTime: 7,
-  },
-  {
-    id: 3,
-    title: 'Implementasi Sistem Informasi Perpustakaan Digital Sederhana',
-    slug: 'implementasi-sistem-perpustakaan-digital',
-    description: 'Upaya kelompok MBKM dalam membantu digitalisasi administrasi sekolah untuk mempermudah sirkulasi peminjaman buku siswa.',
-    thumbnail: null,
-    author: {
-      name: 'Budi Santoso',
-      avatar: '/assets/avatars/budi.jpg',
-    },
-    publishedAt: '2024-02-05',
-    readTime: 6,
-  },
-  {
-    id: 4,
-    title: 'Mengasah Logika Siswa Lewat Pemrograman Visual Scratch',
-    slug: 'mengasah-logika-siswa-scratch',
-    description: 'Kegiatan ekstrakurikuler komputer: Mengajarkan konsep algoritma dasar dan computational thinking kepada siswa SD dengan cara yang menyenangkan.',
-    thumbnail: null,
-    author: {
-      name: 'Dwi Putri',
-      avatar: '/assets/avatars/dwi.jpg',
-    },
-    publishedAt: '2024-02-01',
-    readTime: 6,
-  },
-  {
-    id: 5,
-    title: 'Revitalisasi Website Sekolah Sebagai Sarana Informasi Publik',
-    slug: 'revitalisasi-website-sekolah',
-    description: 'Project pembuatan profil sekolah berbasis web untuk memudahkan penyebaran informasi jadwal ujian dan penerimaan siswa baru (PPDB).',
-    thumbnail: 'https://www.jagoanhosting.com/blog/wp-content/uploads/2023/05/contoh-website-SMA-Negeri-2-Kebumen-www.smandakebumen.sch_.id_-1.png',
-    author: {
-      name: 'Eko Prasetyo',
-      avatar: '/assets/avatars/eko.jpg',
-    },
-    publishedAt: '2024-01-28',
-    readTime: 4,
-  },
-]
-
-export default function BlogPreview() {
+export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [itemsPerPage, setItemsPerPage] = useState(1)
@@ -100,7 +37,7 @@ export default function BlogPreview() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const maxIndex = Math.max(0, recentPosts.length - itemsPerPage)
+  const maxIndex = Math.max(0, posts.length - itemsPerPage)
 
   useEffect(() => {
     if (!isAutoPlaying) return
@@ -147,11 +84,10 @@ export default function BlogPreview() {
               Blog & Artikel
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
-              Artikel Terbaru
+              Informasi
             </h2>
             <p className="text-gray-600 mt-4 max-w-2xl">
-              Baca artikel-artikel menarik seputar teknologi, programming, dan pengalaman
-              dari mahasiswa MBKM.
+              Artikel terbaru seputar kegiatan kami di lapangan
             </p>
           </div>
           <Link
@@ -163,12 +99,16 @@ export default function BlogPreview() {
         </motion.div>
 
         <div className="relative px-0 lg:px-16">
-          <div
+          <motion.div
             className="overflow-hidden rounded-2xl p-2"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             ref={scrollContainerRef}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1, transition: { duration: 0.6 } }}
+            viewport={{ once: true }}
           >
+
             <motion.div
               className="flex"
               animate={{
@@ -180,7 +120,7 @@ export default function BlogPreview() {
                 damping: 30,
               }}
             >
-              {recentPosts.map((post) => (
+              {posts && posts.length > 0 && posts.map((post: any) => (
                 <div
                   key={post.id}
                   className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4"
@@ -190,9 +130,9 @@ export default function BlogPreview() {
                     whileHover={{ y: -8, transition: { duration: 0.2 } }}
                   >
                     <div className="relative h-48 bg-slate-200 overflow-hidden">
-                      {post.thumbnail ? (
+                      {post.thumbnail_url ? (
                         <BlurImage
-                          src={post.thumbnail}
+                          src={post.thumbnail_url}
                           alt={post.title}
                           className="w-full h-full"
                         />
@@ -207,8 +147,8 @@ export default function BlogPreview() {
                       <div className="flex items-center gap-4 mb-3 text-xs text-gray-500">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />
-                          <time dateTime={post.publishedAt}>
-                            {new Date(post.publishedAt).toLocaleDateString('id-ID', {
+                          <time dateTime={post.created_at}>
+                            {new Date(post.created_at).toLocaleDateString('id-ID', {
                               day: 'numeric',
                               month: 'long',
                               year: 'numeric',
@@ -217,7 +157,7 @@ export default function BlogPreview() {
                         </div>
                       </div>
 
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors line-clamp-2 min-h-[3.5rem]">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors line-clamp-2 max-h-[3.5rem]">
                         {post.title}
                       </h3>
 
@@ -229,11 +169,11 @@ export default function BlogPreview() {
                         <div className="flex items-center gap-2 text-xs text-gray-500">
                           <User className="h-3.5 w-3.5" />
                           <span>
-                            Oleh <span className="font-medium text-gray-700">{post.author.name}</span>
+                            Oleh <span className="font-medium text-gray-700">{post.created_by.full_name}</span>
                           </span>
                         </div>
                         <Link
-                          href={`/blog/${post.slug}`}
+                          href={`/artikel/${post.slug}`}
                           className="text-sm font-semibold text-orange-500 hover:text-orange-600 flex items-center gap-1 group/link"
                         >
                           Baca
@@ -245,31 +185,39 @@ export default function BlogPreview() {
                 </div>
               ))}
             </motion.div>
-          </div>
+          </motion.div>
 
-          <div className="hidden lg:block">
-            <button
+          <div
+            className="hidden lg:block"
+          >
+            <motion.button
               onClick={handlePrev}
               disabled={currentIndex === 0}
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-400 z-10 border border-gray-200"
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 z-10 border border-gray-200"
               aria-label="Previous"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.5, ease: "easeOut" } }}
+              viewport={{ once: true }}
             >
               <ChevronLeft className="h-6 w-6" />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               onClick={handleNext}
               disabled={currentIndex >= maxIndex}
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-400 z-10 border border-gray-200"
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 z-10 border border-gray-200"
               aria-label="Next"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.5, ease: "easeOut" } }}
+              viewport={{ once: true }}
             >
               <ChevronRight className="h-6 w-6" />
-            </button>
+            </motion.button>
           </div>
         </div>
 
         <div className="flex justify-center gap-2 mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-            <button
+            <motion.button
               key={index}
               onClick={() => handleDotClick(index)}
               className={`h-2 rounded-full transition-all ${index === currentIndex
@@ -277,6 +225,9 @@ export default function BlogPreview() {
                 : 'w-2 bg-gray-300 hover:bg-gray-400'
                 }`}
               aria-label={`Go to slide ${index + 1}`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1, transition: { duration: 0.6, delay: 0.75, ease: "easeOut" } }}
+              viewport={{ once: true }}
             />
           ))}
         </div>

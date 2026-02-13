@@ -4,6 +4,12 @@ import LogoKM from "@/public/assets/img/kampus-merdeka.png"
 import LogoNextBlack from "@/public/assets/next-black.svg"
 import LogoUNG from "@/public/assets/img/ung.png"
 import LogoKemen from "@/public/assets/img/kemendikbud.png"
+{/* Components */ }
+import AnimatedCounter from './AnimatedCounter'
+{/* Components End */ }
+{/* Interfaces */ }
+import { Viewer } from "@/interfaces/supabase";
+{/* Interfaces End */ }
 
 const footerLinks = {
     platform: [
@@ -24,7 +30,7 @@ const footerLinks = {
     ],
 }
 
-export default function Footer() {
+export default function Footer({ viewers }: { viewers: Viewer[] }) {
     return (
         <footer className="bg-gray-900 text-gray-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
@@ -114,7 +120,7 @@ export default function Footer() {
 
             <div className="flex items-center justify-center gap-1 lg:hidden mb-4">
                 <Eye className="h-4 w-4 text-gray-400 mb-0.5" />
-                <span className="text-sm text-gray-400">0</span>
+                <AnimatedCounter className="text-sm text-gray-400" value={viewers.length} />
             </div>
 
             <div className="border-t border-gray-800">
@@ -126,7 +132,7 @@ export default function Footer() {
 
                         <div className="items-center justify-center gap-1 lg:flex hidden">
                             <Eye className="h-4 w-4 text-gray-400 mb-0.5" />
-                            <span className="text-sm text-gray-400">0</span>
+                            <AnimatedCounter className="text-sm text-gray-400" value={viewers.length} />
                         </div>
 
                         <div className="flex items-center md:text-sm text-xs text-gray-400 gap-1">

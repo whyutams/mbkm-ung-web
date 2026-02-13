@@ -3,22 +3,30 @@
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronDown, Users, BookOpen } from 'lucide-react'
 import Link from 'next/link'
-import GambarRektorat from "@/public/assets/img/rektorat.jpg"
+{/* Components */ }
+import AnimatedCounter from '../AnimatedCounter'
+{/* Components End */ }
+{/* Interfaces */ }
+interface HeroProps {
+    postsCount: number;
+    profilesCount: number;
+}
+{/* Interfaces End */ }
 
-const stats = [
-    {
-        icon: Users,
-        number: '8',
-        label: 'Mahasiswa Terdaftar',
-    },
-    {
-        icon: BookOpen,
-        number: '17',
-        label: 'Artikel Blog',
-    },
-]
+export default function Hero({ postsCount, profilesCount }: HeroProps) {
+    const stats = [
+        {
+            icon: Users,
+            number: profilesCount,
+            label: 'Mahasiswa Terdaftar',
+        },
+        {
+            icon: BookOpen,
+            number: postsCount,
+            label: 'Artikel Blog',
+        },
+    ]
 
-export default function Hero() {
     return (
         <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0 z-0 brightness-75">
@@ -30,12 +38,6 @@ export default function Hero() {
                         backgroundColor: '#1a202c'
                     }}
                 />
-                {/* <div
-                    className="absolute inset-0 opacity-10"
-                    style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-                    }}
-                /> */}
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40">
@@ -119,7 +121,9 @@ export default function Hero() {
                                         <Icon className="md:h-7 md:w-7 h-6 w-6 text-orange-400" />
                                     </div>
                                     <div>
-                                        <p className="md:text-3xl text-2xl font-bold text-white">{stat.number}</p>
+                                        <p className="md:text-3xl text-2xl font-bold text-white">
+                                            <AnimatedCounter value={stat.number} delay={1.5} />
+                                        </p>
                                         <p className="text-gray-300 md:text-sm text-xs">{stat.label}</p>
                                     </div>
                                 </motion.div>
