@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from "react"
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronDown, Users, BookOpen } from 'lucide-react'
 import Link from 'next/link'
@@ -14,6 +15,7 @@ interface HeroProps {
 {/* Interfaces End */ }
 
 export default function Hero({ postsCount, profilesCount }: HeroProps) {
+    const [isScrolled, setIsScrolled] = useState(false)
     const stats = [
         {
             icon: Users,
@@ -26,6 +28,18 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
             label: 'Artikel Blog',
         },
     ]
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrolled = window.scrollY > 300 
+            setIsScrolled(scrolled)
+        }
+
+        handleScroll()
+
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
 
     return (
         <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -140,7 +154,7 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
                 transition={{ duration: 1, delay: 1.2 }}
                 className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
             >
-                <div className="flex flex-col items-center gap-2 text-white/60">
+                <div className={`flex flex-col items-center gap-2 text-white/60 transition-all ${isScrolled ? "opacity-0 scale-95 duration-300" : "opacity-100 scale-100 duration-1000"}`}>
                     <span className="md:text-sm text-xs text-center font-medium">Scroll untuk melihat lebih banyak</span>
                     <motion.div
                         animate={{ y: [0, 8, 0] }}
