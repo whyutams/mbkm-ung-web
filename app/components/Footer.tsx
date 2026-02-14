@@ -8,7 +8,7 @@ import LogoKemen from "@/public/assets/img/kemendikbud.png"
 import AnimatedCounter from './AnimatedCounter'
 {/* Components End */ }
 {/* Interfaces */ }
-import { Viewer } from "@/interfaces/supabase";
+import { Viewer } from "@/interfaces";
 {/* Interfaces End */ }
 
 const footerLinks = {

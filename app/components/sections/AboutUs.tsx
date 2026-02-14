@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 {/* Interfaces */ }
-import { Profile } from "@/interfaces/supabase"
+import { Profile } from "@/interfaces"
 {/* Interfaces End */ }
 
 export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {

@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from 'react'
 import BlurImage from '../BlurImage'
 {/* Components End */ }
 {/* Interfaces */ }
-import { Post } from "@/interfaces/supabase"
+import { Post } from "@/interfaces"
 {/* Interfaces End */ }
 
 export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
