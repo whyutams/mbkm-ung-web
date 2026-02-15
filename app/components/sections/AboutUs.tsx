@@ -26,7 +26,7 @@ export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4 px-1">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 px-1">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -34,13 +34,13 @@ export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {
             transition={{ duration: 0.5 }}
             className="group overflow-hidden transition-all flex flex-col items-center lg:hover:bg-slate-300/[25%] rounded-lg pt-4"
           >
-            <div className="relative w-20 h-20 lg:h-36 md:w-36 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center rounded-full overflow-hidden mb-4">
+            <div className="relative w-20 h-20 lg:w-36 lg:h-36 aspect-square flex-shrink-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center rounded-full overflow-hidden mb-4">
               <div className="text-white text-3xl lg:text-6xl font-bold">
                 {process.env.NEXT_PUBLIC_DOSEN_PEMBIMBING_LAPANGAN?.charAt(0)}
               </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center mb-4 text-center">
+            <div className="flex flex-col justify-center items-center text-center">
               <h3 className="md:text-lg text-sm font-bold text-gray-900 mb-1">
                 {process.env.NEXT_PUBLIC_DOSEN_PEMBIMBING_LAPANGAN}
               </h3>
@@ -58,7 +58,7 @@ export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {
               transition={{ duration: 0.5, delay: index === 0 ? 0.1 : index * 0.1 }}
               className="group overflow-hidden transition-all flex flex-col items-center lg:hover:bg-slate-300/[25%] rounded-lg pt-4 cursor-pointer"
             >
-              <div className="relative w-20 h-20 lg:h-36 md:w-36 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center rounded-full overflow-hidden mb-4">
+              <div className="relative w-20 h-20 lg:w-36 lg:h-36 aspect-square flex-shrink-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center rounded-full overflow-hidden mb-4">
                 {user.avatar_url ? (
                   <img
                     src={user.avatar_url}
@@ -66,7 +66,7 @@ export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="text-white text-3xl lg:text-6xl font-bold">
+                  <div className="text-white text-3xl md:text-5xl font-bold">
                     {user.full_name.charAt(0)}
                   </div>
                 )}
@@ -77,7 +77,7 @@ export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {
                   {user.full_name}
                 </h3>
                 <p className="md:text-sm text-xs text-gray-500 mb-1">{user.study_program}</p>
-                <p className="md:text-xs text-[0.6rem] text-gray-400 mb-4">NIM: {user.nim}</p>
+                <p className="md:text-xs text-[0.6rem] text-gray-400">NIM: {user.nim}</p>
 
               </div>
             </motion.a>

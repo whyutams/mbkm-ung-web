@@ -31,7 +31,7 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
 
     useEffect(() => {
         const handleScroll = () => {
-            const scrolled = window.scrollY > 300 
+            const scrolled = window.scrollY > 500 
             setIsScrolled(scrolled)
         }
 
@@ -119,7 +119,7 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
                     transition={{ duration: 0.8, delay: 0.7 }}
                     className="mt-16 lg:mt-24"
                 >
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl md:p-8 p-5 shadow-2xl">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 lg:gap-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl lg:p-8 p-5 shadow-2xl">
                         <div className="md:block hidden"></div>
                         {stats.map((stat, index) => {
                             const Icon = stat.icon
@@ -129,7 +129,7 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                                    className="flex items-center mx-auto gap-4 sm:flex-col sm:text-center lg:flex-row lg:text-left"
+                                    className="flex items-center mx-auto gap-4 sm:flex-row sm:text-left"
                                 >
                                     <div className="flex-shrink-0 md:w-14 md:h-14 w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
                                         <Icon className="md:h-7 md:w-7 h-6 w-6 text-orange-400" />

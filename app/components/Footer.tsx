@@ -34,8 +34,8 @@ export default function Footer({ viewers }: { viewers: Viewer[] }) {
     return (
         <footer className="bg-gray-900 text-gray-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
-                    <div className="lg:col-span-2">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                    <div className="lg:w-2/5 flex-shrink-0">
                         <div className="flex items-center gap-2 mb-4">
                             <img src={LogoKemen.src} alt="Logo Kemendikbud" className="h-16 w-16" />
                             <img src={LogoUNG.src} alt="Logo UNG" className="h-[62px] w-[62px] mr-[6px]" />
@@ -68,52 +68,45 @@ export default function Footer({ viewers }: { viewers: Viewer[] }) {
                         </div>
                     </div>
 
-                    <div>
-                        <h4 className="text-white font-semibold mb-4">Platform</h4>
-                        <ul className="space-y-2">
-                            {footerLinks.platform.map((link) => (
-                                <li key={link.name}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm hover:text-orange-500 transition-colors"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <div className="lg:w-3/5 grid grid-cols-1 sm:grid-cols-3 gap-8">
+                        <div>
+                            <h4 className="text-white font-semibold mb-4">Platform</h4>
+                            <ul className="space-y-2">
+                                {footerLinks.platform.map((link) => (
+                                    <li key={link.name}>
+                                        <Link href={link.href} className="text-sm hover:text-orange-500 transition-colors">
+                                            {link.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
-                    <div>
-                        <h4 className="text-white font-semibold mb-4">Resources</h4>
-                        <ul className="space-y-2">
-                            {footerLinks.resources.map((link) => (
-                                <li key={link.name}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm hover:text-orange-500 transition-colors"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                        <div>
+                            <h4 className="text-white font-semibold mb-4">Resources</h4>
+                            <ul className="space-y-2">
+                                {footerLinks.resources.map((link) => (
+                                    <li key={link.name}>
+                                        <Link href={link.href} className="text-sm hover:text-orange-500 transition-colors">
+                                            {link.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
-                    <div>
-                        <h4 className="text-white font-semibold mb-4">Legal</h4>
-                        <ul className="space-y-2">
-                            {footerLinks.legal.map((link) => (
-                                <li key={link.name}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-sm hover:text-orange-500 transition-colors"
-                                    >
-                                        {link.name}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                        <div>
+                            <h4 className="text-white font-semibold mb-4">Legal</h4>
+                            <ul className="space-y-2">
+                                {footerLinks.legal.map((link) => (
+                                    <li key={link.name}>
+                                        <Link href={link.href} className="text-sm hover:text-orange-500 transition-colors">
+                                            {link.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -144,7 +137,7 @@ export default function Footer({ viewers }: { viewers: Viewer[] }) {
                                 <span>NextJS</span>
                             </div>
                             by
-                            <a href='https://whyutams-portfolio.vercel.app' target='_blank' title="View portfolio" className="font-medium hover:text-primary transition-colors cursor-pointer">
+                            <a href={process.env.NEXT_PUBLIC_DEV_PORTFOLIO} target='_blank' title="View portfolio" className="font-medium hover:text-primary transition-colors cursor-pointer">
                                 Wahyu Tams <ExternalLink className="h-4 w-4 inline-block mb-0.5" />
                             </a>
                         </div>
