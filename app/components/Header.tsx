@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { ChevronUp, X } from 'lucide-react'
 import { useLenis } from 'lenis/react'
@@ -18,9 +18,10 @@ const navLinks = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isDisplayMobileMenu, setIsDisplayMobileMenu] = useState(false)
+  const [isMenuClosing, setIsMenuClosing] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
   const [displayLogo, setDisplayLogo] = useState(false)
+  const isInitialMount = useRef(true)
   const lenis = useLenis()
 
   useEffect(() => {
@@ -58,11 +59,20 @@ export default function Header() {
   }, [displayLogo])
 
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      setTimeout(() => {
-        setIsDisplayMobileMenu(isMobileMenuOpen)
-      }, 500)
-    } else setIsDisplayMobileMenu(isMobileMenuOpen)
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
+    if (!isMobileMenuOpen) {
+      setIsMenuClosing(true)
+      const timer = setTimeout(() => {
+        setIsMenuClosing(false)
+      }, 300)
+      return () => clearTimeout(timer)
+    } else {
+      setIsMenuClosing(false)
+    }
   }, [isMobileMenuOpen])
 
   const scrollToSection = (href: string) => {
@@ -88,7 +98,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${(isScrolled || isMobileMenuOpen) ? 'bg-white shadow-md py-3' : 'bg-transparent py-4'
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${(isScrolled || isMobileMenuOpen || isMenuClosing) ? 'bg-white shadow-md py-3' : 'bg-transparent py-4'
           }`}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -97,8 +107,8 @@ export default function Header() {
               <div className="flex items-center justify-center gap-2">
                 <img src={LogoKemen.src} alt="Logo Kemendikbud" className="h-10 w-10" />
                 <img src={LogoUNG.src} alt="Logo UNG" className="h-[38px] w-[38px] mr-[2px]" />
-                <img src={LogoKM.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen) ? 'hidden' : ''}`} />
-                <img src={LogoKM2.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen) ? '' : 'hidden'}`} />
+                <img src={LogoKM.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? 'hidden' : ''}`} />
+                <img src={LogoKM2.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? '' : 'hidden'}`} />
               </div>
             </div>
 
@@ -137,7 +147,7 @@ export default function Header() {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-lg transition-colors ${(isScrolled || isMobileMenuOpen) ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
+              className={`lg:hidden p-2 rounded-lg transition-colors ${(isScrolled || isMobileMenuOpen || isMenuClosing) ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
                 }`}
               aria-label="Toggle menu"
             >
