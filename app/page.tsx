@@ -1,5 +1,6 @@
 {/* Libs */ }
 import { createClient } from "@/utils/supabase/server";
+import { headers } from "next/headers";
 {/* Libs End */ }
 {/* Components */ }
 import Header from "./components/Header"
@@ -17,15 +18,31 @@ export default async function HomePage() {
   const { data: general, error: generalError } = await supabase
     .from("general")
     .select("*")
-
   if (generalError) console.log("Error fetch general:", generalError.message);
   {/* General End */ }
 
   {/* Viewers */ }
+  const headerList = await headers();
+  const _cip = headerList.get("x-forwarded-for") || null;
+  if (_cip) {
+    const { data } = await supabase
+      .from("viewers")
+      .select("*")
+      .eq("ip", _cip)
+      .is("post_id", null)
+      .limit(1)
+      .maybeSingle();
+    if (!data) {
+      const { error } = await supabase
+        .from("viewers")
+        .insert({ ip: _cip });
+      if (error) console.error(`Error when saving client user ip: ${_cip}`, error.message);
+    }
+  }
+
   const { data: viewers, error: viewersError } = await supabase
     .from("viewers")
     .select("*")
-
   if (viewersError) console.log("Error fetch viewers:", viewersError.message);
   {/* Viewers End */ }
 
@@ -47,9 +64,8 @@ export default async function HomePage() {
         nim
       )
       `)
-      .eq('is_published', true)
-      .order("created_at", { ascending: false })
-
+    .eq('is_published', true)
+    .order("created_at", { ascending: false })
   if (postsError) console.log("Error fetch posts:", postsError.message);
   {/* Posts End */ }
 
@@ -57,7 +73,6 @@ export default async function HomePage() {
   const { data: profiles, error: profilesError } = await supabase
     .from("profiles")
     .select("*")
-
   if (profilesError) console.log("Error fetch profiles:", profilesError.message);
   {/* Profiles End */ }
   {/* SUPABASE END */ }
