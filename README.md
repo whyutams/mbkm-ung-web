@@ -47,7 +47,7 @@ Pastikan sudah menginstal:
 ### 1. Clone Repositori
 
 ```bash
-git clone https://github.com/username/mbkm-ung-web.git
+git clone https://github.com/whyutams/mbkm-ung-web.git
 cd mbkm-ung-web
 ```
 
