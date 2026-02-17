@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# 🎓 MBKM UNG Web Platform
+### Portofolio Kelompok MBKM
 
-First, run the development server:
+Platform digital resmi untuk kelompok mahasiswa **Merdeka Belajar Kampus Merdeka (MBKM)** 
+
+![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Supabase](https://img.shields.io/badge/Supabase-2.x-3ECF8E?style=for-the-badge&logo=supabase)
+
+</div>
+
+## 🛠️ Tech Stack
+
+### Core
+| Teknologi | Versi | Kegunaan |
+|---|---|---|
+| [Next.js](https://nextjs.org) | 16.1.6 | Framework utama (App Router) |
+| [TypeScript](https://typescriptlang.org) | 5.x | Type safety |
+| [Tailwind CSS](https://tailwindcss.com) | 3.x | Styling |
+| [Supabase](https://supabase.com) | 2.x | Auth, Database, Storage |
+
+### UI & Animasi
+| Teknologi | Kegunaan |
+|---|---|
+| [Framer Motion](https://www.framer.com/motion/) | Animasi komponen |
+| [Lenis](https://lenis.darkroom.engineering/) | Smooth scrolling |
+| [Lucide React](https://lucide.dev/) | Icon library |
+
+### Editor & Lainnya
+| Teknologi | Kegunaan |
+|---|---|
+| [TipTap](https://tiptap.dev/) | Rich text editor untuk blog |
+| [clsx](https://github.com/lukeed/clsx) + [tailwind-merge](https://github.com/dcastil/tailwind-merge) | Utility class management |
+
+## 🚀 Cara Memulai
+
+### Prasyarat
+
+Pastikan sudah menginstal:
+- [Node.js](https://nodejs.org) versi **18.x** atau lebih baru
+- [npm](https://www.npmjs.com/) atau package manager lainnya
+- Akun [Supabase](https://supabase.com) (gratis)
+
+### 1. Clone Repositori
+
+```bash
+git clone https://github.com/username/mbkm-ung-web.git
+cd mbkm-ung-web
+```
+
+### 2. Install Dependensi
+
+```bash
+npm install
+```
+
+### 3. Konfigurasi Environment Variables
+
+Buat file `.env.local` di root proyek:
+
+```env
+# Supabase
+# Dapatkan dari: https://supabase.com/dashboard/project/YOUR_PROJECT/settings/api
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### 4. Jalankan Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔐 Sistem Autentikasi
 
-## Learn More
+Proyek ini menggunakan login berbasis **Username** (bukan email), karena:
+- Lebih familiar untuk konteks mahasiswa
+- Email tidak selalu diingat, username lebih mudah
 
-To learn more about Next.js, take a look at the following resources:
+**Alur Login:**
+```
+User input username + password
+        ↓
+Server Action query: get_email_by_username(username)
+        ↓
+Supabase signInWithPassword(email, password)
+        ↓
+Session disimpan via cookies
+        ↓
+Redirect ke /dashboard
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Protected Routes:**
+Semua route yang memerlukan autentikasi dijaga oleh `middleware.ts` menggunakan Supabase SSR.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📜 Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | Kegunaan |
+|---|---|
+| `npm run dev` | Jalankan development server |
+| `npm run build` | Build untuk production |
+| `npm run start` | Jalankan production server |
+| `npm run lint` | Cek kode dengan ESLint |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+<div align="center">
+
+Selamat Mencoba ✨
+
+</div>
