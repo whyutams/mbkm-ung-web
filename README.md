@@ -76,31 +76,6 @@ npm run dev
 
 Buka [http://localhost:3000](http://localhost:3000) di browser.
 
----
-
-## 🔐 Sistem Autentikasi
-
-Proyek ini menggunakan login berbasis **Username** (bukan email), karena:
-- Lebih familiar untuk konteks mahasiswa
-- Email tidak selalu diingat, username lebih mudah
-
-**Alur Login:**
-```
-User input username + password
-        ↓
-Server Action query: get_email_by_username(username)
-        ↓
-Supabase signInWithPassword(email, password)
-        ↓
-Session disimpan via cookies
-        ↓
-Redirect ke /dashboard
-```
-
-**Protected Routes:**
-Semua route yang memerlukan autentikasi dijaga oleh `middleware.ts` menggunakan Supabase SSR.
-
----
 
 ## 📜 Scripts
 
