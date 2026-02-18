@@ -6,15 +6,17 @@ import { ArrowRight, ChevronDown, Users, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 {/* Components */ }
 import AnimatedCounter from '../AnimatedCounter'
+import { AnyAaaaRecord } from "node:dns"
 {/* Components End */ }
 {/* Interfaces */ }
 interface HeroProps {
     postsCount: number;
     profilesCount: number;
+    generalSetting: any
 }
 {/* Interfaces End */ }
 
-export default function Hero({ postsCount, profilesCount }: HeroProps) {
+export default function Hero({ postsCount, profilesCount, generalSetting }: HeroProps) {
     const [isScrolled, setIsScrolled] = useState(false)
     const stats = [
         {
@@ -31,7 +33,7 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
 
     useEffect(() => {
         const handleScroll = () => {
-            const scrolled = window.scrollY > 500 
+            const scrolled = window.scrollY > 500
             setIsScrolled(scrolled)
         }
 
@@ -48,7 +50,7 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
                 <div
                     className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-50"
                     style={{
-                        backgroundImage: `url('/assets/img/rektorat.jpg')`,
+                        backgroundImage: `url('${generalSetting?.hero_background || "/assets/img/rektorat.jpg"}')`,
                         backgroundColor: '#1a202c'
                     }}
                 />
@@ -78,8 +80,22 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
                         transition={{ duration: 0.8, delay: 0.3 }}
                         className="text-4xl lg:text-6xl font-bold leading-tight mb-6"
                     >
-                        Belajar, Berkarya, dan {' '}
-                        <span className="text-orange-500">Berinovasi</span>
+                        {generalSetting?.hero_title ? (
+                            <>
+                                {generalSetting.hero_title.split(" ").map((_: string, i: number) => (
+                                    generalSetting.hero_title.split(" ").length - 1 === i ? (
+                                        <span key={i} className="text-orange-500">{_}</span>
+                                    ) : (
+                                        <span key={i}>{_} </span>
+                                    )
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                Belajar, Berkarya, dan {' '}
+                                <span className="text-orange-500">Berinovasi</span>
+                            </>
+                        )}
                     </motion.h1>
 
                     <motion.p
@@ -88,7 +104,7 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="md:text-lg text-base text-gray-300 mb-8 leading-relaxed"
                     >
-                        {process.env.NEXT_PUBLIC_APP_DESCRIPTION}
+                        {generalSetting?.hero_description || process.env.NEXT_PUBLIC_APP_DESCRIPTION}
                     </motion.p>
 
                     <motion.div
@@ -165,6 +181,6 @@ export default function Hero({ postsCount, profilesCount }: HeroProps) {
                     </motion.div>
                 </div>
             </motion.div>
-        </section>
+        </section >
     )
 }

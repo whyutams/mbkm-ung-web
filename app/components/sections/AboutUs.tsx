@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Profile } from "@/interfaces"
 {/* Interfaces End */ }
 
-export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {
+export default function AboutUs({ profiles, generalSetting }: { profiles: Profile[] | [], generalSetting: any }) {
   return (
     <section id="tentang-kami" className="py-20 lg:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,14 +35,22 @@ export default function AboutUs({ profiles }: { profiles: Profile[] | [] }) {
             className="group overflow-hidden transition-all flex flex-col items-center lg:hover:bg-slate-300/[25%] rounded-lg pt-4"
           >
             <div className="relative w-20 h-20 lg:w-36 lg:h-36 aspect-square flex-shrink-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center rounded-full overflow-hidden mb-4">
-              <div className="text-white text-3xl lg:text-6xl font-bold">
-                {process.env.NEXT_PUBLIC_DOSEN_PEMBIMBING_LAPANGAN?.charAt(0)}
-              </div>
+              {generalSetting?.mbkm_dpl_avatar ? (
+                <img
+                  src={generalSetting.mbkm_dpl_avatar}
+                  alt={generalSetting?.mbkm_dpl || process.env.NEXT_PUBLIC_DOSEN_PEMBIMBING_LAPANGAN}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="text-white text-3xl lg:text-6xl font-bold">
+                  {(generalSetting?.mbkm_dpl || process.env.NEXT_PUBLIC_DOSEN_PEMBIMBING_LAPANGAN)?.charAt(0)}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col justify-center items-center text-center">
               <h3 className="md:text-lg text-sm font-bold text-gray-900 mb-1">
-                {process.env.NEXT_PUBLIC_DOSEN_PEMBIMBING_LAPANGAN}
+                {generalSetting?.mbkm_dpl || process.env.NEXT_PUBLIC_DOSEN_PEMBIMBING_LAPANGAN}
               </h3>
               <p className="md:text-sm text-xs text-gray-500 mb-1">Dosen Pembimbing Lapangan</p>
             </div>

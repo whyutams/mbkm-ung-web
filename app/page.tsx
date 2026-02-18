@@ -18,6 +18,10 @@ export default async function HomePage() {
   const { data: general, error: generalError } = await supabase
     .from("general")
     .select("*")
+    .limit(1)
+    .maybeSingle();
+  const _f = [{ name: "_mbkm_location_name", value: (JSON.parse(general?.data)).mbkm_location_name }];
+  const generalSetting = JSON.parse(_f.map(_ => general?.data?.replaceAll(`{${_.name}}`, _.value))[0]);
   if (generalError) console.log("Error fetch general:", generalError.message);
   {/* General End */ }
 
@@ -79,13 +83,13 @@ export default async function HomePage() {
 
   return (
     <>
-      <Header />
+      <Header generalSetting={generalSetting || {}} />
       <main>
-        <Hero postsCount={posts?.length || 0} profilesCount={profiles?.length || 0} />
+        <Hero postsCount={posts?.length || 0} profilesCount={profiles?.length || 0} generalSetting={generalSetting || {}} />
         <BlogPreview posts={posts?.slice(0, 5) || []} />
-        <AboutUs profiles={profiles || []} />
+        <AboutUs profiles={profiles || []} generalSetting={generalSetting || {}} />
       </main>
-      <Footer viewers={viewers?.filter(x => x?.post_id === null) || []} />
+      <Footer viewers={viewers?.filter(x => x?.post_id === null) || []} generalSetting={generalSetting || {}} />
     </>
   )
 }

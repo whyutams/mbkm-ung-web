@@ -15,7 +15,7 @@ const navLinks = [
   { name: 'Tentang Kami', href: '/#tentang-kami' },
 ]
 
-export default function Header() {
+export default function Header({ generalSetting }: { generalSetting: any }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMenuClosing, setIsMenuClosing] = useState(false)
@@ -105,7 +105,7 @@ export default function Header() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center gap-2">
-                <img src={LogoKemen.src} alt="Logo Kemendikbud" className="h-10 w-10" />
+                <img src={generalSetting?.mbkm_icon || LogoKemen.src} alt="Logo Kemendikbud" className="h-10 w-10" />
                 <img src={LogoUNG.src} alt="Logo UNG" className="h-[38px] w-[38px] mr-[2px]" />
                 <img src={LogoKM.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? 'hidden' : ''}`} />
                 <img src={LogoKM2.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? '' : 'hidden'}`} />
