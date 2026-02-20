@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Mail, MapPin, Phone, Eye, ExternalLink } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import LogoKM from "@/public/assets/img/kampus-merdeka.png"
 import LogoNextBlack from "@/public/assets/next-black.svg"
 import LogoUNG from "@/public/assets/img/ung.png"
@@ -7,9 +10,6 @@ import LogoKemen from "@/public/assets/img/kemendikbud.png"
 {/* Components */ }
 import AnimatedCounter from './AnimatedCounter'
 {/* Components End */ }
-{/* Interfaces */ }
-import { Viewer } from "@/interfaces";
-{/* Interfaces End */ }
 
 const footerLinks = {
     platform: [
@@ -30,14 +30,50 @@ const footerLinks = {
     ],
 }
 
-export default function Footer({ viewers, generalSetting }: { viewers: Viewer[], generalSetting: any }) {
+export default function Footer({ generalSetting }: { generalSetting: any }) {
+    const [viewerCount, setViewerCount] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const IP_STORAGE_KEY = "_ipd"
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const ipdata = localStorage.getItem(IP_STORAGE_KEY)
+                if (!ipdata) {
+                    fetch("https://api.ipify.org?format=json").then(_ => _.json()).then(async (_) => {
+                        const post_response = await fetch('/api/tracking', {
+                            method: "post",
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ ip: _?.ip })
+                        })
+                        const post_result = await post_response.json()
+                        if (post_result.success) {
+                            localStorage.setItem(IP_STORAGE_KEY, JSON.stringify({ date: post_result.data?.created_at, ip: post_result.data?.ip }))
+                        }
+                    }).catch(console.error);
+                }
+
+                const get_response = await fetch('/api/tracking')
+                const get_result = await get_response.json()
+
+                if (get_result.success) setViewerCount(get_result.count);
+            } catch (error) {
+                console.error('Error fetching viewer count:', error)
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [])
+
     return (
         <footer className="bg-gray-900 text-gray-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
                     <div className="lg:w-2/5 flex-shrink-0">
                         <div className="flex items-center gap-2 mb-4">
-                            <img src={generalSetting?.mbkm_icon||LogoKemen.src} alt="Logo Kemendikbud" className="h-16 w-16" />
+                            <img src={generalSetting?.mbkm_icon || LogoKemen.src} alt="Logo Kemendikbud" className="h-16 w-16" />
                             <img src={LogoUNG.src} alt="Logo UNG" className="h-[62px] w-[62px] mr-[6px]" />
                             <img src={LogoKM.src} alt="Logo Kampus Merdeka" className="h-16" />
                         </div>
@@ -118,8 +154,12 @@ export default function Footer({ viewers, generalSetting }: { viewers: Viewer[],
             </div>
 
             <div className="flex items-center justify-center gap-1 lg:hidden mb-4">
-                <Eye className="h-4 w-4 text-gray-400 mb-0.5" />
-                <AnimatedCounter className="text-sm text-gray-400" value={viewers.length} />
+                {!loading && (
+                    <>
+                        <Eye className="h-4 w-4 text-gray-400 mb-0.5" />
+                        <AnimatedCounter className="text-sm text-gray-400" value={viewerCount} />
+                    </>
+                )}
             </div>
 
             <div className="border-t border-gray-800">
@@ -130,8 +170,12 @@ export default function Footer({ viewers, generalSetting }: { viewers: Viewer[],
                         </p>
 
                         <div className="items-center justify-center gap-1 lg:flex hidden">
-                            <Eye className="h-4 w-4 text-gray-400 mb-0.5" />
-                            <AnimatedCounter className="text-sm text-gray-400" value={viewers.length} />
+                            {!loading && (
+                                <>
+                                    <Eye className="h-4 w-4 text-gray-400 mb-0.5" />
+                                    <AnimatedCounter className="text-sm text-gray-400" value={viewerCount} />
+                                </>
+                            )}
                         </div>
 
                         <div className="flex items-center md:text-sm text-xs text-gray-400 gap-1">

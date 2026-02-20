@@ -25,31 +25,6 @@ export default async function HomePage() {
   if (generalError) console.log("Error fetch general:", generalError.message);
   {/* General End */ }
 
-  {/* Viewers */ }
-  const headerList = await headers();
-  const _cip = headerList.get("x-forwarded-for") || null;
-  if (_cip) {
-    const { data } = await supabase
-      .from("viewers")
-      .select("*")
-      .eq("ip", _cip)
-      .is("post_id", null)
-      .limit(1)
-      .maybeSingle();
-    if (!data) {
-      const { error } = await supabase
-        .from("viewers")
-        .insert({ ip: _cip });
-      if (error) console.error(`Error when saving client user ip: ${_cip}`, error.message);
-    }
-  }
-
-  const { data: viewers, error: viewersError } = await supabase
-    .from("viewers")
-    .select("*")
-  if (viewersError) console.log("Error fetch viewers:", viewersError.message);
-  {/* Viewers End */ }
-
   {/* Posts */ }
   const { data: posts, error: postsError } = await supabase
     .from("posts")
@@ -89,7 +64,7 @@ export default async function HomePage() {
         <BlogPreview posts={posts?.slice(0, 5) || []} />
         <AboutUs profiles={profiles || []} generalSetting={generalSetting || {}} />
       </main>
-      <Footer viewers={viewers?.filter(x => x?.post_id === null) || []} generalSetting={generalSetting || {}} />
+      <Footer generalSetting={generalSetting || {}} />
     </>
   )
 }
