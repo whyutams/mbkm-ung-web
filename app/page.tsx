@@ -3,14 +3,12 @@ import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 {/* Libs End */ }
 {/* Components */ }
-import Header from "./components/Header"
 import Hero from "./components/sections/Hero"
 import BlogPreview from "./components/sections/BlogPreview"
 import AboutUs from "./components/sections/AboutUs"
-import Footer from "./components/Footer"
 {/* Components End */ }
 
-export default async function HomePage() {
+export default async function Landing() {
   {/* SUPABASE */ }
   const supabase = await createClient();
 
@@ -58,13 +56,11 @@ export default async function HomePage() {
 
   return (
     <>
-      <Header generalSetting={generalSetting || {}} />
       <main>
         <Hero postsCount={posts?.length || 0} profilesCount={profiles?.length || 0} generalSetting={generalSetting || {}} />
         <BlogPreview posts={posts?.slice(0, 5) || []} />
         <AboutUs profiles={profiles || []} generalSetting={generalSetting || {}} />
       </main>
-      <Footer generalSetting={generalSetting || {}} />
     </>
   )
 }

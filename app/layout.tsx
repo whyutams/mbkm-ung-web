@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+{/* Libs */ }
+import { createClient } from "@/utils/supabase/server";
+{/* Libs End */ }
 {/* Components */ }
 import SmoothScrollProvider from './components/SmoothScrollProvider'
+import Header from "./components/Header"
+import Footer from "./components/Footer"
 {/* Components End */ }
 
 export const metadata: Metadata = {
@@ -9,11 +14,26 @@ export const metadata: Metadata = {
   description: "Platform portofolio, blog, dan direktori anggota untuk mahasiswa MBKM Prodi PTI Universitas Negeri Gorontalo",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  {/* SUPABASE */ }
+  const supabase = await createClient();
+
+  {/* General */ }
+  const { data: general, error: generalError } = await supabase
+    .from("general")
+    .select("*")
+    .limit(1)
+    .maybeSingle();
+  const _f = [{ name: "_mbkm_location_name", value: (JSON.parse(general?.data)).mbkm_location_name }];
+  const generalSetting = JSON.parse(_f.map(_ => general?.data?.replaceAll(`{${_.name}}`, _.value))[0]);
+  if (generalError) console.log("Error fetch general:", generalError.message);
+  {/* General End */ }
+  {/* SUPABASE END */ }
+
   return (
     <html lang="id" className="scroll-smooth" style={{ fontFamily: "'Rubik'" }}>
       <head>
@@ -25,7 +45,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <SmoothScrollProvider>
+          <Header generalSetting={generalSetting || {}} />
           {children}
+          <Footer generalSetting={generalSetting || {}} />
         </SmoothScrollProvider>
       </body>
     </html>
