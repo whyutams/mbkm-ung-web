@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
         })
 
     } catch (error: any) {
-        console.log('Unexpected error in track-visitor API:', error.message)
+        console.error('Unexpected error in track-visitor API:', error.message)
         return NextResponse.json(
             { success: false, error: 'Internal server error or Invalid JSON' },
             { status: 500 }
@@ -93,8 +93,8 @@ export async function GET(request: NextRequest) {
             count: count || 0
         })
 
-    } catch (error) {
-        console.error('Unexpected error in get count:', error)
+    } catch (error: any) {
+        console.error('Unexpected error in get count:', error?.message)
         return NextResponse.json(
             { success: false, error: 'Internal server error' },
             { status: 500 }
