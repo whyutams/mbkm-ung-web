@@ -139,7 +139,7 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
             <ul className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href}
+                  <Link href={link.href}
                     onClick={isHomepage ? (e) => { e.preventDefault(); scrollToSection(link.href) } : () => {}}
                     className={`text-sm font-medium transition-colors relative group ${isActive(link.href)
                       ? isScrolled || !isHomepage
@@ -155,7 +155,7 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
                       className={`absolute -bottom-1 left-0 h-0.5 bg-orange-500 transition-all duration-300 ${isActive(link.href) ? 'w-full' : 'w-0 group-hover:w-full'
                         }`}
                     />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
