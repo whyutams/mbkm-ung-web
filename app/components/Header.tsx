@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ChevronUp, X } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import LogoKM from "@/public/assets/img/kampus-merdeka.png"
@@ -23,40 +24,45 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
   const [displayLogo, setDisplayLogo] = useState(false)
   const isInitialMount = useRef(true)
   const lenis = useLenis()
+  const pathname = usePathname()
+  const isHomepage = pathname === '/'
 
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY > 20
       setIsScrolled(scrolled)
-      if (scrolled !== displayLogo) {
+
+      if (isHomepage && scrolled !== displayLogo) {
         setDisplayLogo(scrolled)
       }
 
-      const scrollPosition = window.scrollY + 100
+      if (isHomepage) {
+        const scrollPosition = window.scrollY + 100
 
-      navLinks.forEach((link) => {
-        const sectionId = link.href === '/' ? 'hero' : link.href.replace('/#', '')
-        const element = document.getElementById(sectionId)
+        navLinks.forEach((link) => {
+          const sectionId = link.href === '/' ? 'hero' : link.href.replace('/#', '')
+          const element = document.getElementById(sectionId)
 
-        if (element) {
-          const offsetTop = element.offsetTop
-          const offsetHeight = element.offsetHeight
+          if (element) {
+            const offsetTop = element.offsetTop
+            const offsetHeight = element.offsetHeight
 
-          if (
-            scrollPosition >= offsetTop &&
-            scrollPosition < offsetTop + offsetHeight
-          ) {
-            setActiveSection(sectionId)
+            if (
+              scrollPosition >= offsetTop &&
+              scrollPosition < offsetTop + offsetHeight
+            ) {
+              setActiveSection(sectionId)
+            }
           }
-        }
-      })
+        })
+      }
     }
 
     handleScroll()
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [displayLogo])
+  }, [displayLogo, isHomepage])
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -76,6 +82,11 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
   }, [isMobileMenuOpen])
 
   const scrollToSection = (href: string) => {
+    if (!isHomepage && href.startsWith('/#')) {
+      window.location.href = href
+      return
+    }
+
     const targetId = href === '/' ? '#hero' : href.replace('/', '')
 
     if (targetId.startsWith('#')) {
@@ -91,6 +102,8 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
   const isActive = (href: string) => {
+    if (!isHomepage) return false
+
     const id = href === '/' ? 'hero' : href.substring(2)
     return activeSection === id
   }
@@ -98,30 +111,41 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
   return (
     <>
       <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${(isScrolled || isMobileMenuOpen || isMenuClosing) ? 'bg-white shadow-md py-3' : 'bg-transparent py-4'
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${isHomepage
+          ? (isScrolled || isMobileMenuOpen || isMenuClosing)
+            ? 'bg-white shadow-md py-3'
+            : 'bg-transparent py-4'
+          : 'bg-white shadow-md py-3'
           }`}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center gap-2">
+              <Link href='/#' className="flex items-center justify-center gap-2">
                 <img src={generalSetting?.mbkm_icon || LogoKemen.src} alt="Logo Kemendikbud" className="h-10 w-10" />
                 <img src={LogoUNG.src} alt="Logo UNG" className="h-[38px] w-[38px] mr-[2px]" />
-                <img src={LogoKM.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? 'hidden' : ''}`} />
-                <img src={LogoKM2.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? '' : 'hidden'}`} />
-              </div>
+
+                {isHomepage ? (
+                  <>
+                    <img src={LogoKM.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? 'hidden' : ''}`} />
+                    <img src={LogoKM2.src} alt="Logo Kampus Merdeka" className={`h-10 ${(displayLogo || isMobileMenuOpen || isMenuClosing) ? '' : 'hidden'}`} />
+                  </>
+                ) : (
+                  <img src={LogoKM2.src} alt="Logo Kampus Merdeka" className="h-10" />
+                )}
+              </Link>
             </div>
 
             <ul className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <li key={link.name}>
-                  <button
-                    onClick={() => scrollToSection(link.href)}
+                  <a href={link.href}
+                    onClick={isHomepage ? (e) => { e.preventDefault(); scrollToSection(link.href) } : () => {}}
                     className={`text-sm font-medium transition-colors relative group ${isActive(link.href)
-                      ? isScrolled
+                      ? isScrolled || !isHomepage
                         ? 'text-orange-500'
                         : 'text-white'
-                      : isScrolled
+                      : isScrolled || !isHomepage
                         ? 'text-gray-700 hover:text-orange-500'
                         : 'text-gray-200 hover:text-white'
                       }`}
@@ -131,7 +155,7 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
                       className={`absolute -bottom-1 left-0 h-0.5 bg-orange-500 transition-all duration-300 ${isActive(link.href) ? 'w-full' : 'w-0 group-hover:w-full'
                         }`}
                     />
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -147,7 +171,9 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden p-2 rounded-lg transition-colors ${(isScrolled || isMobileMenuOpen || isMenuClosing) ? 'text-gray-700 hover:bg-gray-100' : 'text-white hover:bg-white/10'
+              className={`lg:hidden p-2 rounded-lg transition-colors ${(isScrolled || isMobileMenuOpen || isMenuClosing) || !isHomepage
+                ? 'text-gray-700 hover:bg-gray-100'
+                : 'text-white hover:bg-white/10'
                 }`}
               aria-label="Toggle menu"
             >
@@ -164,7 +190,9 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
 
           {/* Mobile Menu */}
           <div
-            className={`lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 rounded-b-2xl transition-all duration-500 ease-in-out transform origin-top ${isMobileMenuOpen ? 'visible opacity-100 translate-y-0 delay-200' : 'invisible opacity-0 -translate-y-4'}`} >
+            className={`lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 rounded-b-2xl transition-all duration-500 ease-in-out transform origin-top ${isMobileMenuOpen ? 'visible opacity-100 translate-y-0 delay-200' : 'invisible opacity-0 -translate-y-4'
+              }`}
+          >
             <ul className="flex flex-col">
               {navLinks.map((link) => (
                 <li key={link.name}>
@@ -192,7 +220,13 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
         </nav>
       </header>
 
-      <button id='btn-scroll-up' className={`bg-primary shadow-xl fixed bottom-6 right-6 lg:bottom-8 lg:right-8 p-3 rounded-full z-50 hover:scale-110 hover:brightness-90 transition-all transform ease-in-out ${isScrolled ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-0 pointer-events-none"}`} onClick={scrollToTop} title='Kembali ke atas'>
+      <button
+        id='btn-scroll-up'
+        className={`bg-primary shadow-xl fixed bottom-6 right-6 lg:bottom-8 lg:right-8 p-3 rounded-full z-50 hover:scale-110 hover:brightness-90 transition-all transform ease-in-out ${isScrolled ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-0 pointer-events-none"
+          }`}
+        onClick={scrollToTop}
+        title='Kembali ke atas'
+      >
         <ChevronUp className='w-5 h-5 lg:w-6 lg:h-6 text-white' />
       </button>
     </>
