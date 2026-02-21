@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import NextTopLoader from 'nextjs-toploader';
 import "./globals.css";
 {/* Libs */ }
 import { createClient } from "@/utils/supabase/server";
@@ -28,8 +29,11 @@ export default async function RootLayout({
     .select("*")
     .limit(1)
     .maybeSingle();
-  const _f = [{ name: "_mbkm_location_name", value: (JSON.parse(general?.data)).mbkm_location_name }];
-  const generalSetting = JSON.parse(_f.map(_ => general?.data?.replaceAll(`{${_.name}}`, _.value))[0]);
+  let generalSetting = {};
+  if (!generalError && general?.data) {
+    const _f = [{ name: "_mbkm_location_name", value: (JSON.parse(general.data)).mbkm_location_name }];
+    generalSetting = JSON.parse(_f.map(_ => general?.data?.replaceAll(`{${_.name}}`, _.value))[0]);
+  }
   if (generalError) console.log("Error fetch general:", generalError.message);
   {/* General End */ }
   {/* SUPABASE END */ }
@@ -44,6 +48,17 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased">
+        <NextTopLoader
+          color="#f97316"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={2}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #f97316,0 0 5px #f97316"
+        />
         <SmoothScrollProvider>
           <Header generalSetting={generalSetting || {}} />
           {children}
