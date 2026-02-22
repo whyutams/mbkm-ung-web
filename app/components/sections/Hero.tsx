@@ -121,7 +121,7 @@ export default function Hero({ postsCount, profilesCount, generalSetting }: Hero
                             <ArrowRight className="h-5 w-5" />
                         </Link>
                         <Link
-                            href="#about"
+                            href="#tentang-kami"
                             className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white md:text-base text-sm rounded-full font-semibold hover:bg-white/20 transition-all flex items-center justify-center"
                         >
                             Tentang Kami
