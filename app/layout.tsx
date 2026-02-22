@@ -8,6 +8,7 @@ import { createClient } from "@/utils/supabase/server";
 import SmoothScrollProvider from './components/SmoothScrollProvider'
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+import AOSInit from "./components/AOSInit"
 {/* Components End */ }
 
 export const metadata: Metadata = {
@@ -58,7 +59,11 @@ export default async function RootLayout({
           easing="ease"
           speed={200}
           shadow="0 0 10px #f97316,0 0 5px #f97316"
+          showForHashAnchor={false}
         />
+
+        <AOSInit />
+
         <SmoothScrollProvider>
           <Header generalSetting={generalSetting || {}} />
           {children}
