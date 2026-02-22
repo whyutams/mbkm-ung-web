@@ -11,7 +11,7 @@ import BlurImage from '../BlurImage'
 import { Post } from "@/interfaces"
 {/* Interfaces End */ }
 
-export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
+export default function Articles({ posts }: { posts: Post[] | [] }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [itemsPerPage, setItemsPerPage] = useState(1)
@@ -72,11 +72,9 @@ export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
   return (
     <section id="blog" className="py-20 lg:py-32 bg-[#F8FAFC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
+          data-aos="fade-up"
+          data-aos-duration="800"
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4"
         >
           <div>
@@ -96,17 +94,16 @@ export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
           >
             Lihat Semua
           </Link>
-        </motion.div>
+        </div>
 
         <div className="relative px-0 lg:px-16">
-          <motion.div
+          <div
             className="overflow-hidden rounded-2xl p-2"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             ref={scrollContainerRef}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1, transition: { duration: 0.6 } }}
-            viewport={{ once: true }}
+            data-aos="fade-in"
+            data-aos-duration="800"
           >
 
             <motion.div
@@ -125,10 +122,7 @@ export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
                   key={post.id}
                   className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4"
                 >
-                  <motion.article
-                    className="group bg-white rounded-2xl overflow-hidden shadow transition-all border border-gray-100 h-full"
-                    whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                  >
+                  <article className="group bg-white rounded-2xl overflow-hidden shadow transition-all duration-200 hover:-translate-y-2 hover:shadow-lg border border-gray-100 h-full">
                     <div className="relative h-48 bg-slate-200 overflow-hidden">
                       {post.thumbnail_url ? (
                         <BlurImage
@@ -181,53 +175,53 @@ export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
                         </Link>
                       </div>
                     </div>
-                  </motion.article>
+                  </article>
                 </div>
               ))}
             </motion.div>
-          </motion.div>
+          </div>
 
           <div
             className="hidden lg:block"
           >
-            <motion.button
+            <button
               onClick={handlePrev}
               disabled={currentIndex === 0}
+              data-aos="fade-right"
+              data-aos-duration="800"
+              data-aos-delay="500"
               className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 z-10 border border-gray-200"
               aria-label="Previous"
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.5, ease: "easeOut" } }}
-              viewport={{ once: true }}
             >
               <ChevronLeft className="h-6 w-6" />
-            </motion.button>
-            <motion.button
+            </button>
+            <button
               onClick={handleNext}
               disabled={currentIndex >= maxIndex}
+              data-aos="fade-left"
+              data-aos-duration="800"
+              data-aos-delay="500"
               className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:text-gray-400 z-10 border border-gray-200"
               aria-label="Next"
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.5, ease: "easeOut" } }}
-              viewport={{ once: true }}
             >
               <ChevronRight className="h-6 w-6" />
-            </motion.button>
+            </button>
           </div>
         </div>
 
         <div className="flex justify-center gap-2 mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-            <motion.button
+            <button
               key={index}
               onClick={() => handleDotClick(index)}
+              data-aos="fade-in"
+              data-aos-duration="800"
+              data-aos-delay="750"
               className={`h-2 rounded-full transition-all ${index === currentIndex
                 ? 'w-8 bg-orange-500'
                 : 'w-2 bg-gray-300 hover:bg-gray-400'
                 }`}
               aria-label={`Go to slide ${index + 1}`}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1, transition: { duration: 0.6, delay: 0.75, ease: "easeOut" } }}
-              viewport={{ once: true }}
             />
           ))}
         </div>
@@ -251,10 +245,9 @@ export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
           </button>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+        <div
+          data-aos="fade-up"
+          data-aos-duration="800"
           className="mt-12 text-center sm:hidden"
         >
           <Link
@@ -263,7 +256,7 @@ export default function BlogPreview({ posts }: { posts: Post[] | [] }) {
           >
             Lihat Semua
           </Link>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

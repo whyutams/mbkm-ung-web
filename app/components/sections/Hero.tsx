@@ -1,12 +1,10 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { motion } from 'framer-motion'
 import { ArrowRight, ChevronDown, Users, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 {/* Components */ }
 import AnimatedCounter from '../AnimatedCounter'
-import { AnyAaaaRecord } from "node:dns"
 {/* Components End */ }
 {/* Interfaces */ }
 interface HeroProps {
@@ -57,27 +55,26 @@ export default function Hero({ postsCount, profilesCount, generalSetting }: Hero
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
+                <div
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
                     className="text-white"
                 >
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
+                    <div
+                        data-aos="fade-right"
+                        data-aos-duration="1000"
+                        data-aos-delay="200"
                         className="inline-block mb-4"
                     >
                         <span className="px-4 py-2 bg-orange-500/20 backdrop-blur-sm border border-orange-500/30 rounded-full text-orange-400 md:text-sm text-xs font-medium md:font-semibold">
                             MBKM - Asistensi Mengajar di Satuan Pendidikan
                         </span>
-                    </motion.div>
+                    </div>
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.3 }}
+                    <h1
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                        data-aos-delay="300"
                         className="text-4xl lg:text-6xl font-bold leading-tight mb-6"
                     >
                         {generalSetting?.hero_title ? (
@@ -96,21 +93,21 @@ export default function Hero({ postsCount, profilesCount, generalSetting }: Hero
                                 <span className="text-orange-500">Berinovasi</span>
                             </>
                         )}
-                    </motion.h1>
+                    </h1>
 
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                        data-aos-delay="400"
                         className="md:text-lg text-base text-gray-300 mb-8 leading-relaxed"
                     >
                         {generalSetting?.hero_description || process.env.NEXT_PUBLIC_APP_DESCRIPTION}
-                    </motion.p>
+                    </p>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.5 }}
+                    <div
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                        data-aos-delay="500"
                         className="flex flex-col sm:flex-row gap-4"
                     >
                         <Link
@@ -126,13 +123,13 @@ export default function Hero({ postsCount, profilesCount, generalSetting }: Hero
                         >
                             Tentang Kami
                         </Link>
-                    </motion.div>
-                </motion.div>
+                    </div>
+                </div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.7 }}
+                <div
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
+                    data-aos-delay="700"
                     className="mt-16 lg:mt-24"
                 >
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 lg:gap-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl lg:p-8 p-5 shadow-2xl">
@@ -140,11 +137,11 @@ export default function Hero({ postsCount, profilesCount, generalSetting }: Hero
                         {stats.map((stat, index) => {
                             const Icon = stat.icon
                             return (
-                                <motion.div
+                                <div
                                     key={stat.label}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                                    data-aos="fade-up"
+                                    data-aos-duration="700"
+                                    data-aos-delay={800 + index * 100}
                                     className="flex items-center mx-auto gap-4 sm:flex-row sm:text-left"
                                 >
                                     <div className="flex-shrink-0 md:w-14 md:h-14 w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
@@ -156,31 +153,28 @@ export default function Hero({ postsCount, profilesCount, generalSetting }: Hero
                                         </p>
                                         <p className="text-gray-300 md:text-sm text-xs">{stat.label}</p>
                                     </div>
-                                </motion.div>
+                                </div>
                             )
                         })}
                         <div className="md:block hidden"></div>
                     </div>
-                </motion.div>
+                </div>
             </div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 1.2 }}
-                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            >
-                <div className={`flex flex-col items-center gap-2 text-white/60 transition-all ${isScrolled ? "opacity-0 scale-95 duration-300" : "opacity-100 scale-100 duration-1000"}`}>
-                    <span className="md:text-sm text-xs text-center font-medium">Scroll untuk melihat lebih banyak</span>
-                    <motion.div
-                        animate={{ y: [0, 8, 0] }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-                        className="flex justify-center pt-1"
-                    >
-                        <ChevronDown className="h-7 w-7 text-white/80" />
-                    </motion.div>
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
+                <div
+                    data-aos="fade-in"
+                    data-aos-duration="1200"
+                    data-aos-delay="1200"
+                >
+                    <div className={`flex flex-col items-center gap-2 text-white/60 transition-all ${isScrolled ? "opacity-0 scale-95 duration-300" : "opacity-100 scale-100 duration-1000"}`}>
+                        <span className="md:text-sm text-xs text-center font-medium">Scroll untuk melihat lebih banyak</span>
+                        <div className="flex justify-center pt-1 animate-bounce">
+                            <ChevronDown className="h-7 w-7 text-white/80" />
+                        </div>
+                    </div>
                 </div>
-            </motion.div>
+            </div>
         </section >
     )
 }

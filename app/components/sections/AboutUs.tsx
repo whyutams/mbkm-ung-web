@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 {/* Interfaces */ }
 import { Profile } from "@/interfaces"
 {/* Interfaces End */ }
@@ -9,11 +8,9 @@ export default function AboutUs({ profiles, generalSetting }: { profiles: Profil
   return (
     <section id="tentang-kami" className="py-20 lg:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
+          data-aos="fade-up"
+          data-aos-duration="800"
           className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-4"
         >
           <div>
@@ -24,14 +21,12 @@ export default function AboutUs({ profiles, generalSetting }: { profiles: Profil
               Dosen Pembimbing Lapangan dan Daftar Mahasiswa
             </p>
           </div>
-        </motion.div>
+        </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 px-1">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          <div
+            data-aos="fade-in"
+            data-aos-duration="700"
             className="group overflow-hidden transition-all flex flex-col items-center lg:hover:bg-slate-300/[25%] rounded-lg pt-4"
           >
             <div className="relative w-20 h-20 lg:w-36 lg:h-36 aspect-square flex-shrink-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center rounded-full overflow-hidden mb-4">
@@ -54,16 +49,15 @@ export default function AboutUs({ profiles, generalSetting }: { profiles: Profil
               </h3>
               <p className="md:text-sm text-xs text-gray-500 mb-1">Dosen Pembimbing Lapangan</p>
             </div>
-          </motion.div>
+          </div>
 
           {profiles && profiles.length > 0 && profiles.map((user, index) => (
-            <motion.a
+            <a
               href={`/user/${user.username}`}
               key={user.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index === 0 ? 0.1 : index * 0.1 }}
+              data-aos="fade-in"
+              data-aos-duration="700"
+              data-aos-delay={index === 0 ? 100 : index * 100}
               className="group overflow-hidden transition-all flex flex-col items-center lg:hover:bg-slate-300/[25%] rounded-lg pt-4 cursor-pointer"
             >
               <div className="relative w-20 h-20 lg:w-36 lg:h-36 aspect-square flex-shrink-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 flex items-center justify-center rounded-full overflow-hidden mb-4">
@@ -88,7 +82,7 @@ export default function AboutUs({ profiles, generalSetting }: { profiles: Profil
                 <p className="md:text-xs text-[0.6rem] text-gray-400">NIM: {user.nim}</p>
 
               </div>
-            </motion.a>
+            </a>
           ))}
         </div>
       </div>

@@ -1,10 +1,9 @@
 {/* Libs */ }
 import { createClient } from "@/utils/supabase/server";
-import { headers } from "next/headers";
 {/* Libs End */ }
 {/* Components */ }
 import Hero from "./components/sections/Hero"
-import BlogPreview from "./components/sections/BlogPreview"
+import Articles from "./components/sections/Articles"
 import AboutUs from "./components/sections/AboutUs"
 {/* Components End */ }
 
@@ -58,7 +57,7 @@ export default async function Landing() {
     <>
       <main>
         <Hero postsCount={posts?.length || 0} profilesCount={profiles?.length || 0} generalSetting={generalSetting || {}} />
-        <BlogPreview posts={posts?.slice(0, 5) || []} />
+        <Articles posts={posts?.slice(0, 5) || []} />
         <AboutUs profiles={profiles || []} generalSetting={generalSetting || {}} />
       </main>
     </>
