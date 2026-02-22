@@ -23,9 +23,37 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
   const [activeSection, setActiveSection] = useState('hero')
   const [displayLogo, setDisplayLogo] = useState(false)
   const isInitialMount = useRef(true)
+  const hasScrolledToHash = useRef(false)
   const lenis = useLenis()
   const pathname = usePathname()
   const isHomepage = pathname === '/'
+
+  useEffect(() => {
+    if (!isHomepage || hasScrolledToHash.current || !lenis) return
+
+    const hash = window.location.hash
+    if (!hash || hash === '#/' || hash === '#') return
+
+    const targetId = hash.substring(1)
+
+    const attemptScroll = () => {
+      const element = document.getElementById(targetId)
+      if (element && !hasScrolledToHash.current) {
+        hasScrolledToHash.current = true
+        lenis.scrollTo(element, { offset: -80, duration: 1 })
+        setActiveSection(targetId)
+      }
+    }
+
+    const timeouts = [
+      setTimeout(attemptScroll, 100),
+      setTimeout(attemptScroll, 1000),
+      setTimeout(attemptScroll, 1500),
+      setTimeout(attemptScroll, 2000),
+    ]
+
+    return () => timeouts.forEach(clearTimeout)
+  }, [isHomepage, lenis])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,6 +66,7 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
 
       if (isHomepage) {
         const scrollPosition = window.scrollY + 100
+        let currentSection = 'hero'
 
         navLinks.forEach((link) => {
           const sectionId = link.href === '/' ? 'hero' : link.href.replace('/#', '')
@@ -51,18 +80,25 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
               scrollPosition >= offsetTop &&
               scrollPosition < offsetTop + offsetHeight
             ) {
-              setActiveSection(sectionId)
+              currentSection = sectionId
             }
           }
         })
+
+        if (activeSection !== currentSection) {
+          setActiveSection(currentSection)
+          const targetHash = currentSection === 'hero' ? '' : `#${currentSection}`
+          if (window.location.hash !== targetHash) {
+            window.history.replaceState(null, '', targetHash || window.location.pathname)
+          }
+        }
       }
     }
 
     handleScroll()
-
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [displayLogo, isHomepage])
+  }, [displayLogo, isHomepage, activeSection])
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -95,15 +131,20 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
         lenis.scrollTo(element, { offset: -80 })
         setActiveSection(targetId.substring(1))
         setIsMobileMenuOpen(false)
+        window.history.pushState(null, '', href)
       }
     }
   }
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (isHomepage) {
+      window.history.pushState(null, '', '/')
+    }
+  }
 
   const isActive = (href: string) => {
     if (!isHomepage) return false
-
     const id = href === '/' ? 'hero' : href.substring(2)
     return activeSection === id
   }
@@ -112,10 +153,10 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
     <>
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${isHomepage
-          ? (isScrolled || isMobileMenuOpen || isMenuClosing)
-            ? 'bg-white shadow-md py-3'
-            : 'bg-transparent py-4'
-          : 'bg-white shadow-md py-3'
+            ? (isScrolled || isMobileMenuOpen || isMenuClosing)
+              ? 'bg-white shadow-md py-3'
+              : 'bg-transparent py-4'
+            : 'bg-white shadow-md py-3'
           }`}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,15 +180,16 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
             <ul className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href}
-                    onClick={isHomepage ? (e) => { e.preventDefault(); scrollToSection(link.href) } : () => {}}
+                  <Link
+                    href={link.href}
+                    onClick={isHomepage ? (e) => { e.preventDefault(); scrollToSection(link.href) } : () => { }}
                     className={`text-sm font-medium transition-colors relative group ${isActive(link.href)
-                      ? isScrolled || !isHomepage
-                        ? 'text-orange-500'
-                        : 'text-white'
-                      : isScrolled || !isHomepage
-                        ? 'text-gray-700 hover:text-orange-500'
-                        : 'text-gray-200 hover:text-white'
+                        ? isScrolled || !isHomepage
+                          ? 'text-orange-500'
+                          : 'text-white'
+                        : isScrolled || !isHomepage
+                          ? 'text-gray-700 hover:text-orange-500'
+                          : 'text-gray-200 hover:text-white'
                       }`}
                   >
                     {link.name}
@@ -172,8 +214,8 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`lg:hidden p-2 rounded-lg transition-colors ${(isScrolled || isMobileMenuOpen || isMenuClosing) || !isHomepage
-                ? 'text-gray-700 hover:bg-gray-100'
-                : 'text-white hover:bg-white/10'
+                  ? 'text-gray-700 hover:bg-gray-100'
+                  : 'text-white hover:bg-white/10'
                 }`}
               aria-label="Toggle menu"
             >
@@ -188,7 +230,6 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
             </button>
           </div>
 
-          {/* Mobile Menu */}
           <div
             className={`lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg py-4 rounded-b-2xl transition-all duration-500 ease-in-out transform origin-top ${isMobileMenuOpen ? 'visible opacity-100 translate-y-0 delay-200' : 'invisible opacity-0 -translate-y-4'
               }`}
@@ -199,8 +240,8 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
                   <button
                     onClick={() => scrollToSection(link.href)}
                     className={`w-full text-left px-6 py-3 text-sm font-medium transition-colors ${isActive(link.href)
-                      ? 'text-orange-500 bg-orange-50'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-orange-500'
+                        ? 'text-orange-500 bg-orange-50'
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-orange-500'
                       }`}
                   >
                     {link.name}
@@ -223,7 +264,7 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
 
       <button
         id='btn-scroll-up'
-        className={`bg-primary shadow-xl fixed bottom-6 right-6 lg:bottom-8 lg:right-8 p-3 rounded-full z-50 hover:scale-110 hover:brightness-90 transition-all transform ease-in-out ${isScrolled ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-0 pointer-events-none"
+        className={`bg-orange-500 shadow-xl fixed bottom-6 right-6 lg:bottom-8 lg:right-8 p-3 rounded-full z-50 hover:scale-110 hover:brightness-90 transition-all transform ease-in-out ${isScrolled ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-0 pointer-events-none"
           }`}
         onClick={scrollToTop}
         title='Kembali ke atas'
