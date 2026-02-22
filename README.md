@@ -25,7 +25,8 @@ Platform digital resmi untuk kelompok mahasiswa **Merdeka Belajar Kampus Merdeka
 ### UI & Animasi
 | Teknologi | Kegunaan |
 |---|---|
-| [Framer Motion](https://www.framer.com/motion/) | Animasi komponen |
+| [AOS](https://michalsnik.github.io/aos/) | Animasi utama |
+| [Framer Motion](https://www.framer.com/motion/) | Animasi tambahan |
 | [Lenis](https://lenis.darkroom.engineering/) | Smooth scrolling |
 | [Lucide React](https://lucide.dev/) | Icon library |
 
