@@ -83,6 +83,7 @@ Buka [http://localhost:3000](http://localhost:3000) di browser.
 | Command | Kegunaan |
 |---|---|
 | `npm run dev` | Jalankan development server |
+| `npm run host` | Jalankan development server via local network |
 | `npm run build` | Build untuk production |
 | `npm run start` | Jalankan production server |
 | `npm run lint` | Cek kode dengan ESLint |
