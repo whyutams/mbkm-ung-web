@@ -210,6 +210,7 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
               <li className="border-t border-gray-200 mt-2 pt-4 px-6 flex flex-col gap-2">
                 <Link
                   href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className="text-center py-2 px-6 bg-orange-500 text-white rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors"
                 >
                   Masuk
