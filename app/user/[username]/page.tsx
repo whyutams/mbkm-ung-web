@@ -19,11 +19,7 @@ export async function generateMetadata({ params }: UserPageProps): Promise<Metad
         .eq("username", username)
         .single()
 
-    if (!profile) {
-        return {
-            title: "User Not Found",
-        }
-    }
+    if (!profile) return {};
 
     return {
         title: `${profile.full_name} - MBKM UNG`,
