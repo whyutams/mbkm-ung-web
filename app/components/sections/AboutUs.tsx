@@ -1,5 +1,6 @@
 'use client'
 
+import Link from "next/link"
 {/* Interfaces */ }
 import { Profile } from "@/interfaces"
 {/* Interfaces End */ }
@@ -52,7 +53,7 @@ export default function AboutUs({ profiles, generalSetting }: { profiles: Profil
           </div>
 
           {profiles && profiles.length > 0 && profiles.map((user, index) => (
-            <a
+            <Link
               href={`/user/${user.username}`}
               key={user.id}
               data-aos="fade-in"
@@ -82,7 +83,7 @@ export default function AboutUs({ profiles, generalSetting }: { profiles: Profil
                 <p className="md:text-xs text-[0.6rem] text-gray-400">NIM: {user.nim}</p>
 
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
