@@ -6,10 +6,11 @@ import { useInView, useMotionValue, useSpring } from "framer-motion"
 interface AnimatedCounterProps {
   value: number | string
   className?: string
-  delay?: number
+  delay?: number,
+  start?: number
 }
 
-export default function AnimatedCounter({ value, className, delay = 0.5 }: AnimatedCounterProps) {
+export default function AnimatedCounter({ value, className, delay = 0.5, start = 0 }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const motionValue = useMotionValue(0)
   const springValue = useSpring(motionValue, {
@@ -18,7 +19,7 @@ export default function AnimatedCounter({ value, className, delay = 0.5 }: Anima
   })
 
   const isInView = useInView(ref, { once: true })
-  
+
   const [hasStarted, setHasStarted] = useState(false)
   const suffix = value.toString().replace(/[0-9]/g, "")
 
@@ -29,7 +30,7 @@ export default function AnimatedCounter({ value, className, delay = 0.5 }: Anima
         motionValue.set(numericValue)
         setHasStarted(true)
       }, delay * 1000)
-      
+
       return () => clearTimeout(timeout)
     }
   }, [isInView, delay, value, motionValue])
@@ -45,7 +46,7 @@ export default function AnimatedCounter({ value, className, delay = 0.5 }: Anima
 
   return (
     <span className={className} ref={ref}>
-      0{suffix}
+      {start}{suffix}
     </span>
   )
 }
