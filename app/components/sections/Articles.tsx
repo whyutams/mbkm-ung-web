@@ -211,17 +211,17 @@ export default function Articles({ posts }: { posts: Post[] | [] }) {
 
         <div className="flex justify-center gap-2 mt-8">
           {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-            <button
+            <motion.button
               key={index}
               onClick={() => handleDotClick(index)}
-              data-aos="fade-in"
-              data-aos-duration="800"
-              data-aos-delay="750"
               className={`h-2 rounded-full transition-all ${index === currentIndex
                 ? 'w-8 bg-orange-500'
                 : 'w-2 bg-gray-300 hover:bg-gray-400'
                 }`}
               aria-label={`Go to slide ${index + 1}`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1, transition: { duration: 0.6, delay: 0.75, ease: "easeOut" } }}
+              viewport={{ once: true }}
             />
           ))}
         </div>
