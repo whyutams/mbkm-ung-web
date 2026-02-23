@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     try {
         const supabase = await createClient()
         const body = await request.json()
-        const { ip } = body
+        const { ip, post_id, get_all } = body
 
         // const headersList = await headers()
         // const ip =
@@ -22,44 +22,74 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        const { data: existing } = await supabase
+        let existingQuery = supabase
             .from('viewers')
             .select('ip, created_at')
             .eq('ip', ip)
-            .is('post_id', null)
-            .maybeSingle()
 
-        if (existing) {
-            return NextResponse.json({
-                success: true,
-                data: {
-                    ip: existing.ip,
-                    created_at: existing.created_at,
-                    already_exists: true
-                }
-            })
+        if (post_id) {
+            existingQuery = existingQuery.eq('post_id', post_id)
+        } else {
+            existingQuery = existingQuery.is('post_id', null)
         }
 
-        const { data: inserted, error } = await supabase
-            .from('viewers')
-            .insert({ ip })
-            .select('ip, created_at')
-            .single()
+        const { data: existing } = await existingQuery.maybeSingle()
 
-        if (error) {
-            console.error('Error inserting viewer:', error.message)
-            return NextResponse.json(
-                { success: false, error: 'Failed to track visitor' },
-                { status: 500 }
-            )
+        let record = existing as unknown as any
+
+        if (!existing) {
+            const insertData: any = { ip }
+            if (post_id) {
+                insertData.post_id = post_id
+            }
+
+            const { data: inserted, error } = await supabase
+                .from('viewers')
+                .insert(insertData)
+                .select('ip, created_at')
+                .single()
+
+            if (error) {
+                console.error('Error inserting viewer:', error.message)
+                return NextResponse.json(
+                    { success: false, error: 'Failed to track visitor' },
+                    { status: 500 }
+                )
+            }
+            
+            record = inserted
+        }
+
+        if (get_all) {
+            let countQuery = supabase
+                .from('viewers')
+                .select('*', { count: 'exact', head: true })
+
+            if (post_id) {
+                countQuery = countQuery.eq('post_id', post_id)
+            } else {
+                countQuery = countQuery.is('post_id', null)
+            }
+
+            const { count } = await countQuery
+
+            return NextResponse.json({
+                success: true,
+                count: count || 0,
+                data: {
+                    ip: record.ip,
+                    created_at: record.created_at,
+                    already_exists: !!existing
+                }
+            })
         }
 
         return NextResponse.json({
             success: true,
             data: {
-                ip: inserted.ip,
-                created_at: inserted.created_at,
-                already_exists: false
+                ip: record.ip,
+                created_at: record.created_at,
+                already_exists: !!existing
             }
         })
 
@@ -75,11 +105,20 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
     try {
         const supabase = await createClient()
+        const searchParams = request.nextUrl.searchParams
+        const post_id = searchParams.get('post_id')
 
-        const { count, error } = await supabase
+        let query = supabase
             .from('viewers')
             .select('*', { count: 'exact', head: true })
-            .is('post_id', null)
+
+        if (post_id) {
+            query = query.eq('post_id', post_id)
+        } else {
+            query = query.is('post_id', null)
+        }
+
+        const { count, error } = await query
 
         if (error) {
             return NextResponse.json(
