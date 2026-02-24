@@ -3,7 +3,10 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Calendar, BookOpen, Linkedin, Github, Instagram, ArrowLeft, Mail, GraduationCap, MapPin } from "lucide-react"
 import type { Metadata } from "next"
+{/* Components */ }
 import BlurImage from "@/app/components/BlurImage"
+import ButtonPrevious from "@/app/components/ButtonPrevious"
+{/* Components End */ }
 
 interface UserPageProps {
     params: Promise<{ username: string }>
@@ -52,13 +55,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
         <main className="min-h-screen bg-gray-50">
             <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 text-white py-20 pt-32">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Link
-                        href="/#tentang-kami"
-                        className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-8 transition-colors"
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                        Kembali ke Beranda
-                    </Link>
+                    <ButtonPrevious className="text-white/80 hover:text-white mb-8" />
 
                     <div
                         data-aos="fade-up"
