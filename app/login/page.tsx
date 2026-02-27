@@ -135,16 +135,11 @@ export default function LoginPage() {
                             className="w-full py-3 px-4 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 focus:ring-1 focus:outline-none focus:ring-orange-500/50 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             {loading ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                    <span>Masuk</span>
-                                </>
+                                <Loader2 className="w-5 h-5 animate-spin" />
                             ) : (
-                                <>
-                                    <LogIn className="w-5 h-5" />
-                                    <span>Masuk</span>
-                                </>
+                                <LogIn className="w-5 h-5" />
                             )}
+                            <span>Masuk</span>
                         </button>
                     </form>
 
