@@ -89,7 +89,7 @@ export default function Articles({ posts }: { posts: Post[] | [] }) {
             </p>
           </div>
           <Link
-            href="/blog"
+            href="/post"
             className="group md:flex hidden items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-500/50 flex-shrink-0"
           >
             Lihat Semua
@@ -251,7 +251,7 @@ export default function Articles({ posts }: { posts: Post[] | [] }) {
           className="mt-12 text-center sm:hidden"
         >
           <Link
-            href="/blog"
+            href="/post"
             className="inline-flex items-center gap-2 px-8 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-all shadow-lg"
           >
             Lihat Semua
