@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server"
 import Link from "next/link"
-import { Calendar, Search, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { Calendar, Search, ArrowRight, ChevronLeft, ChevronRight, User } from "lucide-react"
 import type { Metadata } from "next"
 {/* Components */ }
 import BlurImage from "@/app/components/BlurImage"
@@ -116,23 +116,23 @@ export default async function Posts({ searchParams }: { searchParams: Promise<{ 
                                     data-aos="fade-up"
                                     data-aos-duration="700"
                                     data-aos-delay={index % 12 * 50}
-                                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
+                                    className="group bg-white rounded-2xl overflow-hidden shadow transition-all duration-200 hover:-translate-y-2 hover:shadow-lg border border-gray-100 h-full"
                                 >
-                                    <div className="relative h-48 bg-gray-200 overflow-hidden">
+                                    <div className="relative h-48 bg-slate-200 overflow-hidden">
                                         {post.thumbnail_url ? (
                                             <BlurImage
                                                 src={post.thumbnail_url}
                                                 alt={post.title}
-                                                className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                                                className="w-full h-full"
                                             />
                                         ) : (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-400">
-                                                <div className="text-gray-600 text-sm opacity-70">Tidak ada gambar</div>
+                                            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-300 to-slate-400">
+                                                <div className="text-slate-600 text-sm opacity-70">Tidak ada gambar</div>
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="p-6 flex flex-col flex-1">
+                                    <div className="p-6">
                                         <div className="flex items-center gap-4 mb-3 text-xs text-gray-500">
                                             <div className="flex items-center gap-1">
                                                 <Calendar className="h-3.5 w-3.5" />
@@ -147,40 +147,28 @@ export default async function Posts({ searchParams }: { searchParams: Promise<{ 
                                         </div>
 
                                         <Link href={`/post/${post.slug}`}>
-                                            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors line-clamp-2 min-h-[3.5rem]">
+                                            <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors line-clamp-2 max-h-[3.5rem]">
                                                 {post.title}
                                             </h3>
                                         </Link>
 
-                                        <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3 flex-1">
+                                        <p className="text-gray-600 text-sm leading-5 mb-4 line-clamp-3 text-justify min-h-[3.75rem]">
                                             {post.description}
                                         </p>
 
                                         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                            <div className="flex items-center gap-2">
-                                                {post.created_by.avatar_url ? (
-                                                    <img
-                                                        src={post.created_by.avatar_url}
-                                                        alt={post.created_by.full_name}
-                                                        className="w-8 h-8 rounded-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-xs">
-                                                        {post.created_by.full_name.charAt(0)}
-                                                    </div>
-                                                )}
-                                                <div className="flex flex-col">
-                                                    <span className="text-xs font-medium text-gray-700 truncate max-w-[120px]">
-                                                        {post.created_by.full_name}
-                                                    </span>
-                                                </div>
+                                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                                                <User className="h-3.5 w-3.5" />
+                                                <span>
+                                                    Oleh <span className="font-medium text-gray-700">{post.created_by.full_name}</span>
+                                                </span>
                                             </div>
                                             <Link
                                                 href={`/post/${post.slug}`}
                                                 className="text-sm font-semibold text-orange-500 hover:text-orange-600 flex items-center gap-1 group/link"
                                             >
                                                 Baca
-                                                <ArrowRight className="h-4 w-4 group-hover/link:translate-x-1 transition-transform" />
+                                                <ArrowRight className="h-4 w-4" />
                                             </Link>
                                         </div>
                                     </div>
