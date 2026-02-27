@@ -167,7 +167,7 @@ export default function Articles({ posts }: { posts: Post[] | [] }) {
                           </span>
                         </div>
                         <Link
-                          href={`/artikel/${post.slug}`}
+                          href={`/post/${post.slug}`}
                           className="text-sm font-semibold text-orange-500 hover:text-orange-600 flex items-center gap-1 group/link"
                         >
                           Baca

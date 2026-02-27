@@ -240,7 +240,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
                                                         </time>
                                                     </div>
 
-                                                    <Link href={`/artikel/${post.slug}`}>
+                                                    <Link href={`/post/${post.slug}`}>
                                                         <h3 className="text-xl font-bold text-gray-900 mb-2 hover:text-orange-600 transition-colors line-clamp-2">
                                                             {post.title}
                                                         </h3>
@@ -251,7 +251,7 @@ export default async function UserDetailPage({ params }: UserPageProps) {
                                                     </p>
 
                                                     <Link
-                                                        href={`/artikel/${post.slug}`}
+                                                        href={`/post/${post.slug}`}
                                                         className="inline-flex items-center gap-2 text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors"
                                                     >
                                                         Baca Selengkapnya

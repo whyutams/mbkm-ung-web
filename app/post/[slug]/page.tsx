@@ -261,7 +261,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                                             {relatedPosts.slice(0, 3).map((relatedPost: any) => (
                                                 <Link
                                                     key={relatedPost.id}
-                                                    href={`/artikel/${relatedPost.slug}`}
+                                                    href={`/post/${relatedPost.slug}`}
                                                     className="block group"
                                                 >
                                                     <div className="flex gap-3">
