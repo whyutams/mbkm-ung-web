@@ -13,18 +13,20 @@ export default function PostSearchBox({ search }: { search: string }) {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
-        NProgress.start()
+        if (searchValue.trim().length !== 0) {
+            NProgress.start()
 
-        startTransition(() => {
-            const params = new URLSearchParams()
-            if (searchValue.trim()) {
-                params.set('search', searchValue.trim())
-            }
-            params.set('page', '1')
+            startTransition(() => {
+                const params = new URLSearchParams()
+                if (searchValue.trim()) {
+                    params.set('search', searchValue.trim())
+                }
+                params.set('page', '1')
 
-            const queryString = params.toString()
-            router.push(`/post${queryString ? `?${queryString}` : ''}`)
-        })
+                const queryString = params.toString()
+                router.push(`/post${queryString ? `?${queryString}` : ''}`)
+            })
+        }
     }
 
     useEffect(() => {
