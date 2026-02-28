@@ -240,10 +240,10 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                                             )}
                                             <div className="flex-1 min-w-0">
                                                 <p className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors truncate">
-                                                    {author.full_name}
+                                                    {`@${author.username}`}
                                                 </p>
-                                                <p className="text-sm text-gray-500 truncate">{author.study_program}</p>
-                                                <p className="text-xs text-gray-400 mt-1">{author.nim}</p>
+                                                <p className="text-sm text-gray-500 truncate">{author.full_name}</p>
+                                                <p className="text-xs text-gray-400 mt-1">{author.study_program}</p>
                                             </div>
                                         </div>
                                     </Link>
@@ -294,7 +294,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                                                                     })}
                                                                 </span>
                                                                 <span className="shrink-0">&bull;</span>
-                                                                <span className="truncate">{relatedPost.created_by?.full_name}</span>
+                                                                <span className="truncate">@{relatedPost.created_by?.username}</span>
                                                             </div>
                                                         </div>
                                                     </div>

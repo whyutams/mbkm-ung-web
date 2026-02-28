@@ -160,7 +160,7 @@ export default async function Posts({ searchParams }: { searchParams: Promise<{ 
                                             <div className="flex items-center gap-2 text-xs text-gray-500">
                                                 <User className="h-3.5 w-3.5" />
                                                 <span>
-                                                    Oleh <span className="font-medium text-gray-700">{post.created_by.full_name}</span>
+                                                    Oleh <span className="font-medium text-gray-700">@{post.created_by.username}</span>
                                                 </span>
                                             </div>
                                             <Link
