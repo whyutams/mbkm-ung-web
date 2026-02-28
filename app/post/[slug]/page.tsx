@@ -130,7 +130,7 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                                         })}
                                     </time>
                                 </div>
-                                <span className="text-gray-300">•</span>
+                                <span className="text-gray-300">&bull;</span>
                                 <ArticleViewer postId={post.id} />
                             </div>
                         </div>
@@ -285,13 +285,17 @@ export default async function ArticleDetailPage({ params }: ArticlePageProps) {
                                                             <p className="text-xs text-gray-800 line-clamp-2 group-hover:text-orange-600">
                                                                 {relatedPost.description}
                                                             </p>
-                                                            <p className="text-xs text-gray-500 mt-2">
-                                                                {new Date(relatedPost.created_at).toLocaleDateString('id-ID', {
-                                                                    day: 'numeric',
-                                                                    month: 'short',
-                                                                    year: 'numeric',
-                                                                })}
-                                                            </p>
+                                                            <div className="flex items-center gap-2 text-xs text-gray-500 mt-2 w-full">
+                                                                <span className="shrink-0">
+                                                                    {new Date(relatedPost.created_at).toLocaleDateString('id-ID', {
+                                                                        day: 'numeric',
+                                                                        month: 'short',
+                                                                        year: 'numeric',
+                                                                    })}
+                                                                </span>
+                                                                <span className="shrink-0">&bull;</span>
+                                                                <span className="truncate">{relatedPost.created_by?.full_name}</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </Link>
