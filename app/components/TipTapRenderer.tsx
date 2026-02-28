@@ -10,14 +10,25 @@ interface TipTapRendererProps {
 export default function TipTapRenderer({ content, className = '' }: TipTapRendererProps) {
     if (!content) return null
 
-    const renderNode = (node: any, index: number): React.ReactNode => {
+    let parsedContent = content
+    if (typeof content === 'string') {
+        try {
+            parsedContent = JSON.parse(content)
+        } catch (error) {
+            return null
+        }
+    }
+
+    const renderNode = (node: any, index: number | string): React.ReactNode => {
         if (!node.type) return null
+
+        const textAlignClass = node.attrs?.textAlign ? `text-${node.attrs.textAlign}` : ''
 
         switch (node.type) {
             case 'paragraph':
                 return (
-                    <p key={index} className="mb-4 leading-relaxed text-gray-700">
-                        {node.content?.map((child: any, i: number) => renderNode(child, i))}
+                    <p key={index} className={`mb-4 leading-relaxed text-gray-700 ${textAlignClass}`}>
+                        {node.content?.map((child: any, i: number) => renderNode(child, `${index}-${i}`))}
                     </p>
                 )
 
@@ -33,41 +44,45 @@ export default function TipTapRenderer({ content, className = '' }: TipTapRender
                     6: 'text-base font-bold mb-2 mt-3 text-gray-900',
                 }
                 return (
-                    <HeadingTag key={index} className={headingClasses[level]}>
-                        {node.content?.map((child: any, i: number) => renderNode(child, i))}
+                    <HeadingTag key={index} className={`${headingClasses[level]} ${textAlignClass}`}>
+                        {node.content?.map((child: any, i: number) => renderNode(child, `${index}-${i}`))}
                     </HeadingTag>
                 )
 
             case 'bulletList':
                 return (
-                    <ul key={index} className="list-disc list-inside mb-4 space-y-2 ml-4">
-                        {node.content?.map((child: any, i: number) => renderNode(child, i))}
+                    <ul key={index} className="list-disc list-outside mb-4 space-y-2 ml-5">
+                        {node.content?.map((child: any, i: number) => renderNode(child, `${index}-${i}`))}
                     </ul>
                 )
 
             case 'orderedList':
                 return (
-                    <ol key={index} className="list-decimal list-inside mb-4 space-y-2 ml-4">
-                        {node.content?.map((child: any, i: number) => renderNode(child, i))}
+                    <ol key={index} className="list-decimal list-outside mb-4 space-y-2 ml-5">
+                        {node.content?.map((child: any, i: number) => renderNode(child, `${index}-${i}`))}
                     </ol>
                 )
 
             case 'listItem':
                 return (
-                    <li key={index} className="text-gray-700">
+                    <li key={index} className="text-gray-700 pl-1">
                         {node.content?.map((child: any, i: number) => {
                             if (child.type === 'paragraph') {
-                                return <span key={i}>{child.content?.map((c: any, j: number) => renderNode(c, j))}</span>
+                                return (
+                                    <span key={`${index}-${i}`} className="block mb-1">
+                                        {child.content?.map((c: any, j: number) => renderNode(c, `${index}-${i}-${j}`))}
+                                    </span>
+                                )
                             }
-                            return renderNode(child, i)
+                            return renderNode(child, `${index}-${i}`)
                         })}
                     </li>
                 )
 
             case 'blockquote':
                 return (
-                    <blockquote key={index} className="border-l-4 border-orange-500 pl-4 py-2 mb-4 italic text-gray-600 bg-orange-50">
-                        {node.content?.map((child: any, i: number) => renderNode(child, i))}
+                    <blockquote key={index} className={`border-l-4 border-orange-500 pl-4 py-2 mb-4 italic text-gray-600 bg-orange-50/50 rounded-r-lg ${textAlignClass}`}>
+                        {node.content?.map((child: any, i: number) => renderNode(child, `${index}-${i}`))}
                     </blockquote>
                 )
 
@@ -79,7 +94,7 @@ export default function TipTapRenderer({ content, className = '' }: TipTapRender
                 )
 
             case 'horizontalRule':
-                return <hr key={index} className="my-8 border-gray-300" />
+                return <hr key={index} className="my-8 border-gray-200" />
 
             case 'hardBreak':
                 return <br key={index} />
@@ -91,41 +106,40 @@ export default function TipTapRenderer({ content, className = '' }: TipTapRender
                         src={node.attrs?.src}
                         alt={node.attrs?.alt || ''}
                         title={node.attrs?.title || ''}
-                        className="max-w-full h-auto rounded-lg my-6 shadow-lg"
+                        className="max-w-full h-auto rounded-xl my-6 shadow-md border border-gray-100"
                     />
                 )
 
             case 'text':
-                let text: React.ReactNode = node.text
+                let textNode: React.ReactNode = node.text
 
                 if (node.marks) {
                     node.marks.forEach((mark: any) => {
                         switch (mark.type) {
                             case 'bold':
-                                text = <strong key={index}>{text}</strong>
+                                textNode = <strong>{textNode}</strong>
                                 break
                             case 'italic':
-                                text = <em key={index}>{text}</em>
+                                textNode = <em>{textNode}</em>
                                 break
                             case 'code':
-                                text = <code key={index} className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-orange-600">{text}</code>
+                                textNode = <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-orange-600">{textNode}</code>
                                 break
                             case 'strike':
-                                text = <del key={index}>{text}</del>
+                                textNode = <del>{textNode}</del>
                                 break
                             case 'underline':
-                                text = <u key={index}>{text}</u>
+                                textNode = <u>{textNode}</u>
                                 break
                             case 'link':
-                                text = (
+                                textNode = (
                                     <a
-                                        key={index}
                                         href={mark.attrs?.href}
                                         target={mark.attrs?.target || '_blank'}
                                         rel="noopener noreferrer"
-                                        className="text-orange-500 hover:text-orange-600 underline"
+                                        className="text-orange-500 hover:text-orange-600 underline underline-offset-2 transition-colors"
                                     >
-                                        {text}
+                                        {textNode}
                                     </a>
                                 )
                                 break
@@ -133,7 +147,7 @@ export default function TipTapRenderer({ content, className = '' }: TipTapRender
                     })
                 }
 
-                return <React.Fragment key={index}>{text}</React.Fragment>
+                return <React.Fragment key={index}>{textNode}</React.Fragment>
 
             default:
                 return null
@@ -142,7 +156,7 @@ export default function TipTapRenderer({ content, className = '' }: TipTapRender
 
     return (
         <div className={`prose prose-lg max-w-none ${className}`}>
-            {content.content?.map((node: any, index: number) => renderNode(node, index))}
+            {parsedContent.content?.map((node: any, index: number) => renderNode(node, index))}
         </div>
     )
 }
