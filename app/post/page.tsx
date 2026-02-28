@@ -78,7 +78,7 @@ export default async function Posts({ searchParams }: { searchParams: Promise<{ 
                         <h1 className="text-4xl md:text-5xl font-bold mb-4">
                             Blog & Artikel
                         </h1>
-                        <p className="text-xl text-white/90 mb-8">
+                        <p className="md:text-lg text-base text-white/90 mb-8">
                             Cerita dan pengalaman dari mahasiswa MBKM {mbkm_location_name ? `di ${mbkm_location_name}` : ""}
                         </p>
 
@@ -88,8 +88,8 @@ export default async function Posts({ searchParams }: { searchParams: Promise<{ 
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="flex items-center justify-between mb-8">
-                    <p className="text-gray-600">
+                <div className="grid grid-cols-2 items-center justify-between mb-8">
+                    <p className="text-gray-600 text-sm">
                         {search ? (
                             <>Menampilkan hasil untuk <span className="font-semibold">"{search}"</span> - {count || 0} artikel</>
                         ) : (
@@ -100,7 +100,7 @@ export default async function Posts({ searchParams }: { searchParams: Promise<{ 
                     {search && (
                         <Link
                             href="/post"
-                            className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+                            className="text-sm text-orange-600 hover:text-orange-700 font-medium text-right"
                         >
                             Reset Filter
                         </Link>
