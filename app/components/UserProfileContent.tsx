@@ -7,7 +7,8 @@ import { UserProfileContentPostDeleteButton } from "./UserProfileContentPostDele
 {/* Components End */ }
 
 export async function UserProfileContent({ profile: _profile, posts, session }: { profile: any, posts: any, session: any | null }) {
-    const profile = session?.profile || _profile;
+    const itsLogged = session && session?.profile.username == _profile.username;
+    const profile = itsLogged ? session.profile : _profile;
 
     return (
         <main className="min-h-screen bg-gray-50">
@@ -35,7 +36,7 @@ export async function UserProfileContent({ profile: _profile, posts, session }: 
                         </div>
 
                         <div className="flex-1">
-                            <h1 className="text-4xl md:text-5xl font-bold mb-3">{profile.full_name}</h1>
+                            <h1 className="text-4xl md:text-5xl font-bold mb-3">{profile.full_name}{itsLogged && (<> (Anda)</>)}</h1>
                             <p className="text-xl text-white/90 mb-4">@{profile.username}</p>
 
                             <div className="flex flex-wrap gap-4 text-sm">
