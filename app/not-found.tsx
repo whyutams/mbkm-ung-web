@@ -2,8 +2,12 @@
 
 import { ArrowLeft, SearchX } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-export default function NotFound() {
+export default function NotFoundContent() {
+    const pathname = usePathname()
+    const isDashboard = pathname.startsWith("/dashboard")
+
     return (
         <main className="min-h-[60vh] flex items-center justify-center bg-gray-50 px-4 pt-32 pb-20">
             <div
@@ -24,11 +28,11 @@ export default function NotFound() {
                 </p>
 
                 <Link
-                    href="/"
+                    href={isDashboard ? "/dashboard" : "/"}
                     className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />
-                    Kembali Ke Beranda
+                    Kembali Ke {isDashboard ? "Dashboard" : "Beranda"}
                 </Link>
             </div>
         </main>
