@@ -6,7 +6,7 @@ import ButtonPrevious from "@/app/components/ButtonPrevious"
 {/* Components End */ }
 
 export async function UserProfileContent({ profile: _profile, posts, session }: { profile: any, posts: any, session: any | null }) {
-    const profile = session.profile || _profile;
+    const profile = session?.profile || _profile;
 
     return (
         <main className="min-h-screen bg-gray-50">
@@ -140,7 +140,7 @@ export async function UserProfileContent({ profile: _profile, posts, session }: 
                                 <>
                                     <hr className="my-6 border-gray-200" />
                                     <Link
-                                        href="/profile/edit"
+                                        href="/dashboard/profile/edit"
                                         className="block w-full px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-center"
                                     >
                                         Edit Profile
@@ -169,7 +169,7 @@ export async function UserProfileContent({ profile: _profile, posts, session }: 
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-2xl font-bold text-gray-900">
-                                    Artikel ({posts?.length || 0})
+                                    Postingan ({posts?.length || 0})
                                 </h2>
                             </div>
 
