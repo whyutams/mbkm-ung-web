@@ -1,8 +1,9 @@
 import Link from "next/link"
-import { Calendar, BookOpen, Linkedin, Github, Instagram, GraduationCap } from "lucide-react"
+import { Calendar, BookOpen, Linkedin, Github, Instagram, GraduationCap, Edit, Trash, Eye } from "lucide-react"
 {/* Components */ }
 import BlurImage from "@/app/components/BlurImage"
 import ButtonPrevious from "@/app/components/ButtonPrevious"
+import { UserProfileContentPostDeleteButton } from "./UserProfileContentPostDeleteButton";
 {/* Components End */ }
 
 export async function UserProfileContent({ profile: _profile, posts, session }: { profile: any, posts: any, session: any | null }) {
@@ -141,9 +142,9 @@ export async function UserProfileContent({ profile: _profile, posts, session }: 
                                     <hr className="my-6 border-gray-200" />
                                     <Link
                                         href="/dashboard/profile/edit"
-                                        className="block w-full px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-center"
+                                        className="flex justify-center items-center gap-3 w-full px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-center"
                                     >
-                                        Edit Profile
+                                        <Edit className="w-5 h-5" /> Edit Profile
                                     </Link>
                                 </>
                             )}
@@ -219,15 +220,33 @@ export async function UserProfileContent({ profile: _profile, posts, session }: 
                                                         {post.description}
                                                     </p>
 
-                                                    <Link
-                                                        href={`/post/${post.slug}`}
-                                                        className="inline-flex items-center gap-2 text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors"
-                                                    >
-                                                        Baca Selengkapnya
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                        </svg>
-                                                    </Link>
+                                                    {session && session.user?.username == profile.username ? (
+                                                        <div className="flex gap-2 text-sm">
+                                                            <Link
+                                                                href={`/dashboard/post/${post.slug}`}
+                                                                className="flex gap-2 items-center justify-center w-full px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-center"
+                                                            >
+                                                                <Eye className="w-4 h-4" /> Baca
+                                                            </Link>
+                                                            <Link
+                                                                href={`/dashboard/post/${post.slug}/edit`}
+                                                                className="flex gap-2 items-center justify-center w-full px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors text-center"
+                                                            >
+                                                                <Edit className="w-4 h-4" /> Edit
+                                                            </Link>
+                                                            <UserProfileContentPostDeleteButton post_slug={post.slug} />
+                                                        </div>
+                                                    ) : (
+                                                        <Link
+                                                            href={`/post/${post.slug}`}
+                                                            className="inline-flex items-center gap-2 text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors"
+                                                        >
+                                                            Baca Selengkapnya
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                            </svg>
+                                                        </Link>
+                                                    )}
                                                 </div>
                                             </div>
                                         </article>
