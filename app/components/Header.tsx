@@ -1,24 +1,34 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import NProgress from 'nprogress'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { ChevronUp, X } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { ChevronDown, ChevronUp, LogOut, Menu, UserIcon, X } from 'lucide-react'
 import { useLenis } from 'lenis/react'
 import LogoKM from "@/public/assets/img/kampus-merdeka.png"
 import LogoKM2 from "@/public/assets/img/kampus-merdeka-2.png"
 import LogoUNG from "@/public/assets/img/ung.png"
 import LogoKemen from "@/public/assets/img/kemendikbud.png"
 
-const navLinks = [
-  { name: 'Beranda', href: '/' },
-  { name: 'Blog', href: '/#blog' },
-  { name: 'Tentang Kami', href: '/#tentang-kami' },
-]
+const navLinksData = {
+  landing: [
+    { name: 'Beranda', href: '/' },
+    { name: 'Blog', href: '/#blog' },
+    { name: 'Tentang Kami', href: '/#tentang-kami' },
+  ],
+  dashboard: [
+    { name: 'Dashboard', href: '/dashboard', roles: ['user', 'superadmin'] },
+    { name: 'Blog Saya', href: '/dashboard/mypost', roles: ['user', 'superadmin'] },
+    { name: 'Pengaturan', href: '/dashboard/web-setting', roles: ['superadmin'] },
+    { name: 'Kelola User', href: '/dashboard/user', roles: ['superadmin'] },
+  ]
+}
 
-export default function Header({ generalSetting }: { generalSetting: any }) {
+export default function Header({ generalSetting, session }: { generalSetting: any, session: any | null }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMenuClosing, setIsMenuClosing] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
   const [displayLogo, setDisplayLogo] = useState(false)
@@ -26,7 +36,10 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
   const hasScrolledToHash = useRef(false)
   const lenis = useLenis()
   const pathname = usePathname()
+  const router = useRouter()
   const isHomepage = pathname === '/'
+  const isDashboard = pathname.startsWith("/dashboard") && session
+  const navLinks = isDashboard ? navLinksData.dashboard.filter(_ => _.roles.find(_ => _ == (session?.profile.role || "user"))) : navLinksData.landing
 
   useEffect(() => {
     if (!isHomepage || hasScrolledToHash.current || !lenis) return
@@ -98,7 +111,7 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
     handleScroll()
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [displayLogo, isHomepage, activeSection])
+  }, [displayLogo, isHomepage, activeSection, navLinks, pathname])
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -144,25 +157,47 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
   }
 
   const isActive = (href: string) => {
-    if (!isHomepage) return false
-    const id = href === '/' ? 'hero' : href.substring(2)
-    return activeSection === id
+    if (!isHomepage) {
+      return href == pathname
+    } else {
+      const id = href == '/' ? 'hero' : href.substring(2)
+      return activeSection == id
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth', {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        NProgress.start()
+        router.push('/login')
+      }
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  }
+
+  const truncateText = (t: string) => {
+    return t.length > 12 ? `${t.slice(0, 12)}...` : t
   }
 
   return (
     <>
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${isHomepage
-            ? (isScrolled || isMobileMenuOpen || isMenuClosing)
-              ? 'bg-white shadow-md py-3'
-              : 'bg-transparent py-4'
-            : 'bg-white shadow-md py-3'
+          ? (isScrolled || isMobileMenuOpen || isMenuClosing)
+            ? 'bg-white shadow-md py-3'
+            : 'bg-transparent py-4'
+          : 'bg-white shadow-md py-3'
           }`}
       >
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <Link href='/#' className="flex items-center justify-center gap-2">
+              <Link href={isDashboard ? '/dashboard' : '/#'} className="flex items-center justify-center gap-2">
                 <img src={generalSetting?.mbkm_icon || LogoKemen.src} alt="Logo Kemendikbud" className="h-10 w-10" />
                 <img src={LogoUNG.src} alt="Logo UNG" className="h-[38px] w-[38px] mr-[2px]" />
 
@@ -184,12 +219,12 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
                     href={link.href}
                     onClick={isHomepage ? (e) => { e.preventDefault(); scrollToSection(link.href) } : () => { }}
                     className={`text-sm font-medium transition-colors relative group ${isActive(link.href)
-                        ? isScrolled || !isHomepage
-                          ? 'text-orange-500'
-                          : 'text-white'
-                        : isScrolled || !isHomepage
-                          ? 'text-gray-700 hover:text-orange-500'
-                          : 'text-gray-200 hover:text-white'
+                      ? isScrolled || !isHomepage
+                        ? 'text-orange-500'
+                        : 'text-white'
+                      : isScrolled || !isHomepage
+                        ? 'text-gray-700 hover:text-orange-500'
+                        : 'text-gray-200 hover:text-white'
                       }`}
                   >
                     {link.name}
@@ -202,20 +237,80 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
               ))}
             </ul>
 
-            <div className="hidden lg:flex items-center gap-4">
-              <Link
-                href="/login"
-                className="px-8 py-2 bg-orange-500 text-white rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors shadow-lg hover:shadow-orange-500/50"
-              >
-                Masuk
-              </Link>
-            </div>
+            {isDashboard ? (
+              <>
+                <div className="hidden lg:flex items-center gap-4">
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className="flex items-center gap-2 px-4 rounded-full"
+                    >
+                      {session?.profile.avatar_url ? (
+                        <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 rounded-full w-9 h-9 flex-shrink-0">
+                          <img
+                            src={session?.profile.avatar_url}
+                            alt={session?.profile.full_name}
+                            className="w-full h-full rounded-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
+                          {session?.profile.full_name.charAt(0)}
+                        </div>
+                      )}
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-gray-700">{truncateText(session?.profile.full_name)}</p>
+                        <p className="text-xs text-gray-500">@{truncateText(session?.profile.username)}</p>
+                      </div>
+                      <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+                        <div className="px-4 py-3 border-b border-gray-100">
+                          <p className="text-sm font-medium text-gray-900">{session?.profile.full_name}</p>
+                          <p className="text-xs text-gray-500 mt-1">@{session?.profile.username}</p>
+                        </div>
+                        <Link
+                          href="/dashboard/profile"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        >
+                          <UserIcon className="h-4 w-4" />
+                          Profile
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setIsDropdownOpen(false)
+                            handleLogout()
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Logout
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="hidden lg:flex items-center gap-4">
+                <Link
+                  href="/login"
+                  className="px-8 py-2 bg-orange-500 text-white rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors shadow-lg hover:shadow-orange-500/50"
+                >
+                  Masuk
+                </Link>
+              </div>
+            )}
+
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`lg:hidden p-2 rounded-lg transition-colors ${(isScrolled || isMobileMenuOpen || isMenuClosing) || !isHomepage
-                  ? 'text-gray-700 hover:bg-gray-100'
-                  : 'text-white hover:bg-white/10'
+                ? 'text-gray-700 hover:bg-gray-100'
+                : 'text-white hover:bg-white/10'
                 }`}
               aria-label="Toggle menu"
             >
@@ -240,8 +335,8 @@ export default function Header({ generalSetting }: { generalSetting: any }) {
                   <button
                     onClick={() => scrollToSection(link.href)}
                     className={`w-full text-left px-6 py-3 text-sm font-medium transition-colors ${isActive(link.href)
-                        ? 'text-orange-500 bg-orange-50'
-                        : 'text-gray-700 hover:bg-gray-50 hover:text-orange-500'
+                      ? 'text-orange-500 bg-orange-50'
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-orange-500'
                       }`}
                   >
                     {link.name}
