@@ -42,6 +42,6 @@ export default async function UserDetailPage({ params }: UserProps) {
     }
 
     return (
-        <UserProfile username={username} />
+        <UserProfile username={username} onDashboard={true} />
     )
 }   

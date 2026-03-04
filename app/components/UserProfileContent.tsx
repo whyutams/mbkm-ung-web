@@ -1,14 +1,14 @@
 import Link from "next/link"
-import { Calendar, BookOpen, Linkedin, Github, Instagram, GraduationCap, Edit, Trash, Eye } from "lucide-react"
+import { Calendar, BookOpen, Linkedin, Github, Instagram, GraduationCap, Edit, Trash, Eye } from "lucide-react" 
 {/* Components */ }
 import BlurImage from "@/app/components/BlurImage"
 import ButtonPrevious from "@/app/components/ButtonPrevious"
 import { UserProfileContentPostDeleteButton } from "./UserProfileContentPostDeleteButton";
 {/* Components End */ }
 
-export async function UserProfileContent({ profile: _profile, posts, session }: { profile: any, posts: any, session: any | null }) {
+export async function UserProfileContent({ profile: _profile, posts, session, onDashboard }: { profile: any, posts: any, session: any | null, onDashboard: boolean }) {
     const itsLogged = session && session?.profile.username == _profile.username;
-    const profile = itsLogged ? session.profile : _profile;
+    const profile = itsLogged ? session.profile : _profile; 
 
     return (
         <main className="min-h-screen bg-gray-50">
@@ -36,7 +36,7 @@ export async function UserProfileContent({ profile: _profile, posts, session }: 
                         </div>
 
                         <div className="flex-1">
-                            <h1 className="text-4xl md:text-5xl font-bold mb-3">{profile.full_name}{itsLogged && (<> (Anda)</>)}</h1>
+                            <h1 className="text-4xl md:text-5xl font-bold mb-3">{profile.full_name}{itsLogged && onDashboard && (<> (Anda)</>)}</h1>
                             <p className="text-xl text-white/90 mb-4">@{profile.username}</p>
 
                             <div className="flex flex-wrap gap-4 text-sm">
@@ -171,7 +171,7 @@ export async function UserProfileContent({ profile: _profile, posts, session }: 
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-2xl font-bold text-gray-900">
-                                    Postingan ({posts?.length || 0})
+                                    Blog Saya ({posts?.length || 0})
                                 </h2>
                             </div>
 

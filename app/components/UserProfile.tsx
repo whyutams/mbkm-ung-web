@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server"
 import { getSession } from '@/utils/auth-helpers'
 import { UserProfileContent } from "./UserProfileContent"
 
-export async function UserProfile({ username }: { username: string }) {
+export async function UserProfile({ username, onDashboard }: { username: string, onDashboard: boolean | false}) {
     const supabase = await createClient()
     const session = await getSession()
 
@@ -20,6 +20,6 @@ export async function UserProfile({ username }: { username: string }) {
         .order("created_at", { ascending: false })
 
     return (
-        <UserProfileContent profile={profile} posts={posts} session={session} />
+        <UserProfileContent profile={profile} posts={posts} session={session} onDashboard={onDashboard} />
     )
 }
