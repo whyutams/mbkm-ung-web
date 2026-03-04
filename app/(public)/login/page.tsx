@@ -30,6 +30,8 @@ export default function LoginPage() {
         setError('')
 
         try {
+            NProgress.start()
+
             const response = await fetch('/api/auth', {
                 method: 'post',
                 headers: {
@@ -40,12 +42,12 @@ export default function LoginPage() {
 
             const result = await response.json()
 
+            NProgress.done()
             if (!response.ok) {
                 throw new Error(result.error || 'Login gagal')
             }
-
-            NProgress.start()
-            router.push('/dashboard')
+            
+            window.location.href = "/dashboard"
         } catch (err: any) {
             setError(err.message || 'Terjadi kesalahan, coba lagi')
         } finally {
